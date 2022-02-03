@@ -1,5 +1,10 @@
 // list.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+
+// вариант 3(с)
+// доп задание поиска
+// доп задание fstream // cfile
+
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <stdlib.h>
@@ -8,7 +13,9 @@
 #include <vector>
 #include <ctime>
 #include <cmath>
+#include <cstdio>
 #include <fstream>
+#include <windows.h>
 
 #define TRUE 1;
 #define FALSE 0;
@@ -115,7 +122,8 @@ void Search_Name_That_Contents_Text(string text, MonstersData monsters[], int Am
     int counter = 0;
     for (int i = 0; i < AmountOfMonsters; i++)
     {
-        for (int j = 0; j < monsters[i].monster_name.length(); j++)
+        int len = monsters[i].monster_name.length();
+        for (int j = 0; j < len; j++)
         {
             if (monsters[i].monster_name[j] == text[counter])
             {
@@ -201,27 +209,33 @@ void WiteIntoFile(ofstream& fout, MonstersData monsters[], int AmountOfMonsters)
 
 void CreateRandomMonsters(MonstersData &monsters_rand, int AmountOfMonsters)
 {
-    srand(time(0));
-    int name_length = rand() % 10;
-    for (int i = 0; i < name_length; i++)
+    for (int i = 0; i < AmountOfMonsters; i++)
     {
-        monsters_rand.monster_name = monsters_rand.monster_name + (char)('A' + rand() % 26) ;
+        srand(static_cast<unsigned int>(time(0)));
+        int name_length = rand() % 10;
+        for (int i = 0; i < name_length; i++)
+        {
+            monsters_rand.monster_name = monsters_rand.monster_name + (char)('A' + rand() % 26);
+        }
+        monsters_rand.health_amount = rand() % 50000;
+        monsters_rand.attacks_amount = rand() % 2000;
+        monsters_rand.attack_probability = rand() % RAND_MAX;
+        monsters_rand.special_attack_type = rand() % 4;
+        monsters_rand.apperance_data.year = rand() % 3000;
+        monsters_rand.apperance_data.month = rand() % 12;
+        monsters_rand.apperance_data.day = rand() % 31;
+        monsters_rand.time_of_creation.hour = rand() % 24;
+        monsters_rand.time_of_creation.minute = rand() % 60;
+        monsters_rand.time_of_creation.second = rand() % 60;
     }
-    monsters_rand.health_amount = rand() % 50000;
-    monsters_rand.attacks_amount = rand() % 2000;
-    monsters_rand.attack_probability = rand() % RAND_MAX;
-    monsters_rand.special_attack_type = rand() % 4;
-    monsters_rand.apperance_data.year = rand() % 3000;
-    monsters_rand.apperance_data.month = rand() % 12;
-    monsters_rand.apperance_data.day = rand() % 31;
-    monsters_rand.time_of_creation.hour = rand() % 24;
-    monsters_rand.time_of_creation.minute = rand() % 60;
-    monsters_rand.time_of_creation.second = rand() % 60;
 }
 
 int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "rus");
+
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 
     //GAME START
     int FirstAction;
@@ -366,7 +380,7 @@ int main(int argc, char** argv)
     }
     else if (FirstAction == 2)
     {
-        //emonstrational mode
+        //demonstrational mode
         cout << "there are 5 options" << endl;
         cout << "1 - add elements" << endl;
         cout << "2 - print info to the file" << endl;
@@ -388,10 +402,11 @@ int main(int argc, char** argv)
         MonstersData mon = AddElements(monsters[0], monsters[3]);
         PrintMonsterInfo(mon);
         cout << "lets see the res of 2 and 3 mon addition" << endl << endl;
-        AddElements(monsters[1], monsters[2]);
+        mon = AddElements(monsters[1], monsters[2]);
+        PrintMonsterInfo(mon);
         cout << endl;
 
-        // write info into file (2)
+        // write info into file (2) WAY 1
         ofstream fout;
         fout.open("fileoutput.txt", ios_base::out);
         if (!fout.is_open())
@@ -403,6 +418,26 @@ int main(int argc, char** argv)
         cout << "the program wrote every monsters info into file.txt" << endl << endl;
         fout << "\t\t" << "welcome" << endl;
         WiteIntoFile(fout, monsters, AmountOfMonsters);
+
+        // write info into file (2) WAY 2
+        cout << "option number 2: print info to the file (2nd method)" << endl;
+        FILE* f = fopen("C:\\programming\\list\\list\\fileoutput2.txt", "wt");
+        if (f == nullptr)
+            cout << "errror file not found" << endl;
+        else  
+        {
+            for (int i = 0; i < AmountOfMonsters; i++)
+            {
+                fprintf(f, "monster name:\n");
+                fwrite(&monsters[i].monster_name, sizeof(monsters[i].monster_name), 1, f);
+                fprintf(f, "\nmonster health amount:\n");
+                fwrite(&monsters[i].health_amount, sizeof(monsters[i].health_amount), 1, f);
+                fprintf(f, "\nmonster attacks amount:\n");
+                fwrite(&monsters[i].attacks_amount, sizeof(monsters[i].attacks_amount), 1, f);
+                fprintf(f, "\nmonster attack probability:\n");
+                fwrite(&monsters[i].attack_probability, sizeof(monsters[i].attack_probability), 1, f);
+            }
+        }
 
         // get info from the file (3)
         ifstream fin("fileinput.txt");
@@ -420,6 +455,7 @@ int main(int argc, char** argv)
             fin.close(); // закрываем файл
             cout << buff << endl;
         }
+        cout << endl;
 
         //search for your criteria (5)
         cout << "option number 5: search el" << endl;
@@ -459,13 +495,13 @@ int main(int argc, char** argv)
             start_time = clock();
 
             cout << N << endl;
-            MonstersData* monsters_rand = new MonstersData[N+N*N];
+            MonstersData* monsters_rand = new MonstersData[N + N * N];
             for (int i = 0; i < N; i++)
             {
                 CreateRandomMonsters(*monsters_rand, N);
                 for (int j = 0; j < N; j++)
                 {
-                    monsters_rand[i*j] = AddElements(monsters_rand[i], monsters_rand[j]);
+                    monsters_rand[i * j] = AddElements(monsters_rand[i], monsters_rand[j]);
                 }
                 WiteIntoFile(fout, monsters_rand, N + N * N);
             }
@@ -484,8 +520,8 @@ int main(int argc, char** argv)
     }
     else
     {
-        cout << "error, you choosed a wrong number";
-    }
+    cout << "error, you choosed a wrong number";
+    } 
     return 0;
 }
 
