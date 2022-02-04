@@ -8,12 +8,14 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <algorithm>
 #include <vector>
 #include <ctime>
 #include <cmath>
 #include <cstdio>
+#include <random>
 #include <fstream>
 #include <windows.h>
 
@@ -207,26 +209,45 @@ void WiteIntoFile(ofstream& fout, MonstersData monsters[], int AmountOfMonsters)
     }
 }
 
-void CreateRandomMonsters(MonstersData &monsters_rand, int AmountOfMonsters)
+void WiteIntoFileRand(ofstream& fout, vector <MonstersData> monsters, int AmountOfMonsters)
 {
     for (int i = 0; i < AmountOfMonsters; i++)
     {
-        srand(static_cast<unsigned int>(time(0)));
-        int name_length = rand() % 10;
-        for (int i = 0; i < name_length; i++)
+        fout << "Name: " << monsters[i].monster_name << "\n";
+        fout << "Health amount: " << monsters[i].health_amount << "\n";
+        fout << "Attacks amount: " << monsters[i].attacks_amount << "\n";
+        fout << "Attack probability: " << monsters[i].attack_probability << "\n"; // 0<=attack.probability<=1
+        fout << "Special attack type: " << monsters[i].special_attack_type << "\n";  // 1 - увеличить урон 2 - повторить атаку 3 - вылечить себя 4 - парализовать соперника
+        fout << "Appereance data: " << monsters[i].apperance_data.day << "." << monsters[i].apperance_data.month << "." << monsters[i].apperance_data.year << "\n";
+        fout << "Appereance timing: " << monsters[i].time_of_creation.hour << ":" << monsters[i].time_of_creation.minute << ":" << monsters[i].time_of_creation.second << endl << endl;
+    }
+}
+
+void CreateRandomMonsters(vector <MonstersData> monsters_rand, int AmountOfMonsters)
+{
+    std::random_device rd;
+    std::mt19937 mersenne(rd());
+
+    for (int i = 0; i < AmountOfMonsters; i++)
+    {
+        int name_length = rand() % 8 + 2;
+        monsters_rand[i].monster_name = "";
+        for (int j = 0; j < name_length; j++)
         {
-            monsters_rand.monster_name = monsters_rand.monster_name + (char)('A' + rand() % 26);
+            monsters_rand[i].monster_name = monsters_rand[i].monster_name + (char)('a' + mersenne() % 26);
         }
-        monsters_rand.health_amount = rand() % 50000;
-        monsters_rand.attacks_amount = rand() % 2000;
-        monsters_rand.attack_probability = rand() % RAND_MAX;
-        monsters_rand.special_attack_type = rand() % 4;
-        monsters_rand.apperance_data.year = rand() % 3000;
-        monsters_rand.apperance_data.month = rand() % 12;
-        monsters_rand.apperance_data.day = rand() % 31;
-        monsters_rand.time_of_creation.hour = rand() % 24;
-        monsters_rand.time_of_creation.minute = rand() % 60;
-        monsters_rand.time_of_creation.second = rand() % 60;
+        monsters_rand[i].health_amount = mersenne() % 50000;
+        monsters_rand[i].attacks_amount = mersenne() % 2000;
+        monsters_rand[i].attack_probability = mersenne() % RAND_MAX;
+        monsters_rand[i].special_attack_type = mersenne() % 4;
+        monsters_rand[i].apperance_data.year = mersenne() % 3000;
+        monsters_rand[i].apperance_data.month = mersenne() % 12;
+        monsters_rand[i].apperance_data.day = mersenne() % 31;
+        monsters_rand[i].time_of_creation.hour = mersenne() % 24;
+        monsters_rand[i].time_of_creation.minute = mersenne() % 60;
+        monsters_rand[i].time_of_creation.second = mersenne() % 60;
+
+        PrintMonsterInfo(monsters_rand[i]);
     }
 }
 
@@ -483,6 +504,7 @@ int main(int argc, char** argv)
     {
         //benchmark mode
         int N = 10;
+        vector <MonstersData> monsters_rand;
         unsigned int start_time = 0;
         unsigned int end_time = 0;
         unsigned int search_time = 0;
@@ -495,15 +517,12 @@ int main(int argc, char** argv)
             start_time = clock();
 
             cout << N << endl;
-            MonstersData* monsters_rand = new MonstersData[N + N * N];
-            for (int i = 0; i < N; i++)
+            CreateRandomMonsters(monsters_rand, N);
+
+            for (int i = 0; i < N-1; i++)
             {
-                CreateRandomMonsters(*monsters_rand, N);
-                for (int j = 0; j < N; j++)
-                {
-                    monsters_rand[i * j] = AddElements(monsters_rand[i], monsters_rand[j]);
-                }
-                WiteIntoFile(fout, monsters_rand, N + N * N);
+                monsters_rand[N+i+1] = AddElements(monsters_rand[i], monsters_rand[i+1]);
+                WiteIntoFileRand(fout, monsters_rand, 2 * N + 1);
             }
 
             end_time = clock();
@@ -516,6 +535,8 @@ int main(int argc, char** argv)
             {
                 N = N + 10;
             }
+            monsters_rand.clear();
+            monsters_rand.resize(2 * N - 1);
         }
     }
     else
