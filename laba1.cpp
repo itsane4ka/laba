@@ -223,7 +223,7 @@ void WiteIntoFileRand(ofstream& fout, vector <MonstersData> monsters, int Amount
     }
 }
 
-void CreateRandomMonsters(vector <MonstersData> monsters_rand, int AmountOfMonsters)
+void CreateRandomMonsters(vector <MonstersData> &monsters_rand, int AmountOfMonsters)
 {
     std::random_device rd;
     std::mt19937 mersenne(rd());
@@ -246,8 +246,6 @@ void CreateRandomMonsters(vector <MonstersData> monsters_rand, int AmountOfMonst
         monsters_rand[i].time_of_creation.hour = mersenne() % 24;
         monsters_rand[i].time_of_creation.minute = mersenne() % 60;
         monsters_rand[i].time_of_creation.second = mersenne() % 60;
-
-        PrintMonsterInfo(monsters_rand[i]);
     }
 }
 
@@ -503,8 +501,8 @@ int main(int argc, char** argv)
     else if (FirstAction == 3)
     {
         //benchmark mode
-        int N = 10;
-        vector <MonstersData> monsters_rand;
+        long long N = 10;
+        vector <MonstersData> monsters_rand(N);
         unsigned int start_time = 0;
         unsigned int end_time = 0;
         unsigned int search_time = 0;
@@ -516,27 +514,29 @@ int main(int argc, char** argv)
         {
             start_time = clock();
 
-            cout << N << endl;
+            cout << N << " " << (float)search_time / 1000.0 << " " << endl;
             CreateRandomMonsters(monsters_rand, N);
 
-            for (int i = 0; i < N-1; i++)
+            /*for (int i = 0; i < N - 1; i++)
             {
                 monsters_rand[N+i+1] = AddElements(monsters_rand[i], monsters_rand[i+1]);
-                WiteIntoFileRand(fout, monsters_rand, 2 * N + 1);
-            }
-
+            } */
+            WiteIntoFileRand(fout, monsters_rand, N);
             end_time = clock();
             search_time = end_time - start_time;
             if (search_time / 1000.0 > 1.000)
             {
-                N = N + 5;
+                N = N + 10000;
             }
             else
             {
-                N = N + 10;
+                N = N * 10;
             }
             monsters_rand.clear();
             monsters_rand.resize(2 * N - 1);
+
+            // график апроксимации y = 0.02023 * 1.00004^x
+            // средняя ошибка аппроксимации 85.02761 % (0.0023 ед)
         }
     }
     else
