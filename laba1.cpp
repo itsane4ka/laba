@@ -46,11 +46,12 @@ struct MonstersData {
     string monster_name;
     unsigned int health_amount;
     short int attacks_amount;
-    float attack_probability;
+    double attack_probability;
     int special_attack_type;
     DateOfCreation apperance_data;
     TimeOfCreation time_of_creation;
     Place Place;
+
     long long id;
 };
 
@@ -58,10 +59,21 @@ struct MonstersData {
 void PrintMonsterInfo(MonstersData monster)
 {
     cout << "Name: " << monster.monster_name << "\n";
-    cout << "Health amount: " << monster.monster_name << "\n";
-    cout << "Attacks amount: " << monster.health_amount << "\n";
-    cout << "Attack probability: " << monster.attacks_amount << "\n"; // 0<=attack.probability<=1
-    cout << "Special attack type: " << monster.attack_probability << "\n";  // 1 - увеличить урон 2 - повторить атаку 3 - вылечить себя 4 - парализовать соперника
+    cout << "Health amount: " << monster.health_amount << "\n";
+    cout << "Attacks amount: " << monster.attacks_amount << "\n";
+    cout << "Attack probability: " << monster.attack_probability << "\n"; // 0<=attack.probability<=1
+    cout << "Special attack type: " << monster.special_attack_type << "\n";  // 1 - увеличить урон 2 - повторить атаку 3 - вылечить себя 4 - парализовать соперника
+    cout << "Appereance data: " << monster.apperance_data.day << "." << monster.apperance_data.month << "." << monster.apperance_data.year << "\n";
+    cout << "Appereance timing: " << monster.time_of_creation.hour << ":" << monster.time_of_creation.minute << ":" << monster.time_of_creation.second << endl << endl;
+}
+
+void PrintMonsterInfoVec(MonstersData monster)
+{
+    cout << "Name: " << monster.monster_name << "\n";
+    cout << "Health amount: " << monster.health_amount << "\n";
+    cout << "Attacks amount: " << monster.attacks_amount << "\n";
+    cout << "Attack probability: " << monster.attack_probability << "\n"; // 0<=attack.probability<=1
+    cout << "Special attack type: " << monster.special_attack_type << "\n";  // 1 - увеличить урон 2 - повторить атаку 3 - вылечить себя 4 - парализовать соперника
     cout << "Appereance data: " << monster.apperance_data.day << "." << monster.apperance_data.month << "." << monster.apperance_data.year << "\n";
     cout << "Appereance timing: " << monster.time_of_creation.hour << ":" << monster.time_of_creation.minute << ":" << monster.time_of_creation.second << endl << endl;
 }
@@ -121,10 +133,11 @@ MonstersData AddElements(MonstersData mon1, MonstersData mon2)
 
 void Search_Name_That_Contents_Text(string text, MonstersData monsters[], int AmountOfMonsters)
 {
+    int len = 0;
     int counter = 0;
     for (int i = 0; i < AmountOfMonsters; i++)
     {
-        int len = monsters[i].monster_name.length();
+        len = monsters[i].monster_name.length();
         for (int j = 0; j < len; j++)
         {
             if (monsters[i].monster_name[j] == text[counter])
@@ -144,6 +157,32 @@ void Search_Name_That_Contents_Text(string text, MonstersData monsters[], int Am
     }
 }
 
+void Search_Name_That_Contents_Text(string text, vector<MonstersData> monsters, int AmountOfMonsters)
+{
+    int len = 0;
+    int counter = 0;
+    for (int i = 0; i < AmountOfMonsters; i++)
+    {
+        len = monsters[i].monster_name.length();
+        for (int j = 0; j < len; j++)
+        {
+            if (monsters[i].monster_name[j] == text[counter])
+            {
+                if (counter == text.length() - 1)
+                {
+                    cout << "monster " << i + 1 << " " << monsters[i].monster_name << " name contains your text" << endl;
+                    break;
+                }
+                counter++;
+            }
+            else
+            {
+                counter = 0;
+            }
+        }
+    }
+}
+
 void Search_Attack_Type_And_Amount_Of_Attacks_Range(int min, int max, int attacktype, MonstersData monsters[], int AmountOfMonsters)
 {
     for (int i = 0; i < AmountOfMonsters; i++)
@@ -151,6 +190,18 @@ void Search_Attack_Type_And_Amount_Of_Attacks_Range(int min, int max, int attack
         if (monsters[i].special_attack_type == attacktype && monsters[i].attacks_amount <= max && monsters[i].attacks_amount >= min)
         {
             cout << "monster " << i+1 << " has 3 type of super attack and his"
+                << " attacks amount is " << monsters[i].attacks_amount << " from 500 to 1500" << endl << endl;
+        }
+    }
+}
+
+void Search_Attack_Type_And_Amount_Of_Attacks_Range(int min, int max, int attacktype, vector<MonstersData> monsters, int AmountOfMonsters)
+{
+    for (int i = 0; i < AmountOfMonsters; i++)
+    {
+        if (monsters[i].special_attack_type == attacktype && monsters[i].attacks_amount <= max && monsters[i].attacks_amount >= min)
+        {
+            cout << "monster " << i + 1 << " has 3 type of super attack and his"
                 << " attacks amount is " << monsters[i].attacks_amount << " from 500 to 1500" << endl << endl;
         }
     }
@@ -184,7 +235,46 @@ void Search_After_Timing(TimeOfCreation key, MonstersData monsters[], int Amount
     }
 }
 
+void Search_After_Timing(TimeOfCreation key, vector<MonstersData> monsters, int AmountOfMonsters)
+{
+    for (int i = 0; i < AmountOfMonsters; i++)
+    {
+        if (monsters[i].time_of_creation.hour <= key.hour)
+        {
+            cout << "monster " << i + 1 << " appeared not after key timing" << endl;
+            continue;
+        }
+        else if (monsters[i].time_of_creation.hour == key.hour)
+        {
+            if (monsters[i].time_of_creation.minute <= key.minute)
+            {
+                cout << "monster " << i + 1 << " appeared not after key timing" << endl;
+                continue;
+            }
+            else if (monsters[i].time_of_creation.minute == key.minute)
+            {
+                if (monsters[i].time_of_creation.second <= key.second)
+                {
+                    cout << "monster " << i + 1 << " appeared not after key timing" << endl;
+                    continue;
+                }
+            }
+        }
+    }
+}
+
 void Additional_Search(int S_min, int S_max, int specail_attack_type, int super_attack_chance, MonstersData monsters[], int AmountOfMonsters)
+{
+    for (int i = 0; i < AmountOfMonsters; i++)
+    {
+        if (monsters[i].Place.place_square <= S_max && monsters[i].Place.place_square >= S_min && monsters[i].special_attack_type == specail_attack_type && super_attack_chance >= super_attack_chance)
+        {
+            cout << "place " << monsters[i].Place.place_name << " satisfies the conditions" << endl;
+        }
+    }
+}
+
+void Additional_Search(int S_min, int S_max, int specail_attack_type, int super_attack_chance, vector<MonstersData> monsters, int AmountOfMonsters)
 {
     for (int i = 0; i < AmountOfMonsters; i++)
     {
@@ -256,6 +346,8 @@ int main(int argc, char** argv)
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
+    srand(static_cast<unsigned int>(time(0)));
+
     //GAME START
     int FirstAction;
     cout << "1 - interactive dialog mode\n2 - demonstraion\n3 - banchmark" << endl << endl;
@@ -271,26 +363,52 @@ int main(int argc, char** argv)
     monsters[2] = { "Alex", 10220, 1000, 0.1, 3, {15, 02, 2022}, {10, 00, 10}, {"ocaen", 240, 6}, 0 };
     monsters[3] = { "Looserik", 5500, 560, 0.4, 4, {23, 05, 2023}, {16, 17, 00}, {"space", 5000, 3}, 0 };
 
+    vector <MonstersData> monsters_rand(AmountOfMonsters);
+
+    monsters_rand[0] = { "Mike", 20000, 150, 0.6, 1, {31, 01, 2020}, {23, 04, 50}, {"desert", 500, 4}, 0 };
+    monsters_rand[1] = { "Tom", 35000, 2000, 0.3, 3, {24, 03, 2022} , {04, 30, 40}, {"lake", 560, 2}, 0 };
+    monsters_rand[2] = { "Alex", 10220, 1000, 0.1, 3, {15, 02, 2022}, {10, 00, 10}, {"ocaen", 240, 6}, 0 };
+    monsters_rand[3] = { "Looserik", 5500, 560, 0.4, 4, {23, 05, 2023}, {16, 17, 00}, {"space", 5000, 3}, 0 };
+
     if (FirstAction == 1)
     {
         //interactive dialog mode
         
         cout << "now choose the option you want to check" << endl;
-        cout << "1 - add elements" << endl;
+        cout << "1 - add element" << endl;
         cout << "2 - print info to the file" << endl;
         cout << "3 - get data from the file" << endl;
         cout << "4 - print info to the console" << endl;
-        cout << "5 - search (4)" << endl << endl;
+        cout << "5 - search (4 sub)" << endl << endl;
+        cout << "6 - add info about 2 monsters" << endl << endl;
 
         int SecondOption;
         cin >> SecondOption;
         if (SecondOption == 1)
         {
-            cout << "enter which monsters' info u wonna add (2 num)" << endl; // 1 <= index <= 4
-            int index1, index2;
-            cin >> index1 >> index2;
-            MonstersData mon = AddElements(monsters[index1-1], monsters[index2-1]);
-            PrintMonsterInfo(mon);
+            MonstersData mon_additional;
+            int name_length = rand() % 8 + 2;
+            mon_additional.monster_name = "";
+            for (int j = 0; j < name_length; j++)
+            {
+                mon_additional.monster_name = mon_additional.monster_name + (char)('a' + rand() % 26);
+            }
+            mon_additional.health_amount = rand() % 50000;
+            mon_additional.attacks_amount = rand() % 2000;
+            mon_additional.attack_probability = rand() % RAND_MAX;
+            mon_additional.special_attack_type = rand() % 4;
+            mon_additional.apperance_data.year = rand() % 3000;
+            mon_additional.apperance_data.month = rand() % 12;
+            mon_additional.apperance_data.day = rand() % 31;
+            mon_additional.time_of_creation.hour = rand() % 24;
+            mon_additional.time_of_creation.minute = rand() % 60;
+            mon_additional.time_of_creation.second = rand() % 60;
+            monsters_rand.push_back(mon_additional);
+
+            for (int i = 0; i < monsters_rand.size(); i++)
+            {
+                PrintMonsterInfo(monsters_rand[i]);
+            }
         }
         else if (SecondOption == 2)
         {
@@ -299,7 +417,7 @@ int main(int argc, char** argv)
             cin >> file_name1; //file.txt
 
             ofstream fout(file_name1, ios_base::out, ios_base::trunc);
-            WiteIntoFile(fout, monsters, AmountOfMonsters);
+            WiteIntoFileRand(fout, monsters_rand, AmountOfMonsters);
         }
         else if (SecondOption == 3)
         {
@@ -342,7 +460,7 @@ int main(int argc, char** argv)
                 cout << "enter which str you want to find" << endl;
                 string keystr;
                 cin >> keystr;
-                Search_Name_That_Contents_Text(keystr, monsters, AmountOfMonsters);
+                Search_Name_That_Contents_Text(keystr, monsters_rand, AmountOfMonsters);
                 cout << endl;
             }
             else if (ThirdAction == 2)
@@ -359,7 +477,7 @@ int main(int argc, char** argv)
                 int superattack;
                 cin >> superattack;
 
-                Search_Attack_Type_And_Amount_Of_Attacks_Range(minattacks, maxattacks, superattack, monsters, AmountOfMonsters);
+                Search_Attack_Type_And_Amount_Of_Attacks_Range(minattacks, maxattacks, superattack, monsters_rand, AmountOfMonsters);
             }
             else if (ThirdAction == 3)
             {
@@ -371,7 +489,7 @@ int main(int argc, char** argv)
                 cin >> key.minute;
                 cout << "enter the key time (seconds)" << endl;
                 cin >> key.second;
-                Search_After_Timing(key, monsters, AmountOfMonsters);
+                Search_After_Timing(key, monsters_rand, AmountOfMonsters);
             }
             else if (ThirdAction == 4)
             {
@@ -389,10 +507,18 @@ int main(int argc, char** argv)
                 cout << "enter the super attack probability" << endl;
                 int superattackprobability;
                 cin >> superattackprobability;
-                Additional_Search(minsquare, maxsquare, superattack, superattackprobability, monsters, AmountOfMonsters);
+                Additional_Search(minsquare, maxsquare, superattack, superattackprobability, monsters_rand, AmountOfMonsters);
             }
             else
                 cout << "you choosed the wrong number" << endl;
+        }
+        else if (SecondOption == 6)
+        {
+            cout << "enter which monsters' info you wonna add (2 num)" << endl; // 1 <= index <= 4
+            int index1, index2;
+            cin >> index1 >> index2;
+            MonstersData mon = AddElements(monsters[index1 - 1], monsters[index2 - 1]);
+            PrintMonsterInfo(mon);
         }
         else
             cout << "you choosed the wrong number" << endl;
@@ -440,23 +566,28 @@ int main(int argc, char** argv)
 
         // write info into file (2) WAY 2
         cout << "option number 2: print info to the file (2nd method)" << endl;
-        FILE* f = fopen("C:\\programming\\list\\list\\fileoutput2.txt", "wt");
+        FILE* f = fopen("C:\\programming\\list\\list\\fileoutput2.txt", "w");
         if (f == nullptr)
             cout << "errror file not found" << endl;
         else  
         {
             for (int i = 0; i < AmountOfMonsters; i++)
             {
-                fprintf(f, "monster name:\n");
-                fwrite(&monsters[i].monster_name, sizeof(monsters[i].monster_name), 1, f);
-                fprintf(f, "\nmonster health amount:\n");
-                fwrite(&monsters[i].health_amount, sizeof(monsters[i].health_amount), 1, f);
-                fprintf(f, "\nmonster attacks amount:\n");
-                fwrite(&monsters[i].attacks_amount, sizeof(monsters[i].attacks_amount), 1, f);
-                fprintf(f, "\nmonster attack probability:\n");
-                fwrite(&monsters[i].attack_probability, sizeof(monsters[i].attack_probability), 1, f);
+                fputc(' ', f);
+                fprintf(f, "%i", monsters[i].monster_name);
+                fputc(' ', f);
+                fprintf(f, "%i", monsters[i].health_amount);
+                fputc(' ', f);
+                fprintf(f, "%f", monsters[i].attacks_amount);
+                fputc(' ', f);
+                fprintf(f, "%i", monsters[i].attack_probability);
+                fputc(' ', f);
+                fprintf(f, "%i", monsters[i].special_attack_type);
+                fputc(' ', f);
             }
         }
+        cout << "Size: " << ftell(f) << " bytes" << endl;
+        fclose(f);
 
         // get info from the file (3)
         ifstream fin("fileinput.txt");
@@ -490,13 +621,17 @@ int main(int argc, char** argv)
         cout << "lets find attack type 3 and amount of attacks in range of 500 to 1500" << endl << endl;
         Search_Attack_Type_And_Amount_Of_Attacks_Range(500, 1500, 3, monsters, AmountOfMonsters);
         // num 3
-        cout << "lets find the monster that appeared after 16.40.00" << endl << endl;
-        TimeOfCreation key = {16, 40, 00};
+        TimeOfCreation key = { 0, 0, 0 };
+        key.hour = rand() % 24;
+        key.minute = rand() % 60;
+        key.second = rand() % 60;
         Search_After_Timing(key, monsters, AmountOfMonsters);
         //num 4 (ADDITIONAL)
-        cout << "\nadditional task:" << endl;
-        cout << "\nlets find the monsters by location and other charactistics" << endl << endl;
-        Additional_Search(50, 4000, 3, 0.4, monsters, AmountOfMonsters);
+        int specialattack = rand() % 4;
+        int specialttackprobability = rand() % RAND_MAX;
+        int squaremin = rand() % 500;
+        int squaremax = rand() % 3000;
+        Additional_Search(squaremin, squaremax, specialattack, specialttackprobability, monsters, AmountOfMonsters);
     }
     else if (FirstAction == 3)
     {
@@ -508,7 +643,7 @@ int main(int argc, char** argv)
         unsigned int search_time = 0;
 
         ofstream fout;
-        fout.open("fileoutput.txt", ios_base::out);
+        fout.open("fileoutput.txt", ios_base::out, ios_base::trunc);
 
         while (search_time / 1000.0 < 10.0000)
         {
@@ -516,12 +651,27 @@ int main(int argc, char** argv)
 
             cout << N << " " << (float)search_time / 1000.0 << " " << endl;
             CreateRandomMonsters(monsters_rand, N);
-
-            /*for (int i = 0; i < N - 1; i++)
-            {
-                monsters_rand[N+i+1] = AddElements(monsters_rand[i], monsters_rand[i+1]);
-            } */
             WiteIntoFileRand(fout, monsters_rand, N);
+            // 1 find
+            string keystr;
+            int keystr_length = rand() % 4;
+            for (int j = 0; j < keystr_length; j++)
+            {
+                keystr = keystr + (char)('a' + rand() % 26);
+            }
+            Search_Name_That_Contents_Text(keystr, monsters_rand, AmountOfMonsters);
+            // 2 find
+            int amountattacksmax = rand() % 2000;
+            int amountattacksmin = abs(amountattacksmax - rand() % 300);
+            int specialattacktype = rand() % 4;
+            Search_Attack_Type_And_Amount_Of_Attacks_Range(amountattacksmin, amountattacksmax, specialattacktype, monsters_rand, AmountOfMonsters);
+            // 3 find
+            TimeOfCreation key = { 0, 0, 0 };
+            key.hour = rand() % 24;
+            key.minute = rand() % 60;
+            key.second = rand() % 60;
+            Search_After_Timing(key, monsters_rand, AmountOfMonsters);
+
             end_time = clock();
             search_time = end_time - start_time;
             if (search_time / 1000.0 > 1.000)
@@ -533,7 +683,7 @@ int main(int argc, char** argv)
                 N = N * 10;
             }
             monsters_rand.clear();
-            monsters_rand.resize(2 * N - 1);
+            monsters_rand.resize(N);
 
             // график апроксимации y = 0.02023 * 1.00004^x
             // средняя ошибка аппроксимации 85.02761 % (0.0023 ед)
