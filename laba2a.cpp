@@ -251,16 +251,16 @@ int main()
             cout << "6 - print list length\n";
             cout << endl << endl << endl;
 
-            int SecondOption;
-            cin >> SecondOption;
+            int SecondAction;
+            cin >> SecondAction;
 
-            if (SecondOption == 1)
+            if (SecondAction == 1)
             {
                 // 1 - create empty
                 cout << "option 1: create empty list" << endl;
-                cout << "empty list created (arr, vec, list)" << endl << endl;
+                cout << "empty list created (arr, vec, list)" << endl << endl << endl;
             }
-            else if (SecondOption == 2)
+            else if (SecondAction == 2)
             {
                 // 2 - pushing element to the end
                 cout << "option 2: push element to the end" << endl;
@@ -271,7 +271,7 @@ int main()
                 cin >> circlepush.Oy;
                 cout << "enter the circle's Z" << endl;
                 cin >> circlepush.R;
-                cout << el_counter << endl;
+                //cout << el_counter << endl;
                 if (el_counter == 0)
                 {
                     cout << "U FUCK U FUKC U" << endl;
@@ -282,16 +282,46 @@ int main()
                     ptr->next = NULL;
                     el_counter++;
                 }
-                else if (SecondOption == 3)
-                {
-
-                }
                 else
                 {
                     AddToTheEnd(&ptr, circlepush);
                 }
                 Print(ptr);
                 cout << endl << endl << endl;
+            }
+            else if (SecondAction == 3)
+            {
+                // 3 - insert before index
+                if (el_counter == 0)
+                {
+                    cout << "first push some elements" << endl;
+                }
+                else
+                {
+                    unsigned int index_insert;
+                    cout << "option 3: insert before index" << endl;
+                    cin >> index_insert;
+                    //vector <Circle>::iterator it;
+                    //it = circles_vec.begin() + index_insert;
+
+                    cout << "option 3: insert element" << endl;
+                    Circle circlepush;
+                    cout << "enter the circle's X" << endl;
+                    cin >> circlepush.Ox;
+                    cout << "enter the circle's Y" << endl;
+                    cin >> circlepush.Oy;
+                    cout << "enter the circle's Z" << endl;
+                    cin >> circlepush.R;
+
+                    //cout << "lets see how we can insert element into vec" << endl;
+                    //cout << circles_vec[index_insert].Ox << " " << circles_vec[index_insert].Oy << " " << circles_vec[index_insert].R << endl;
+                    //circles_vec.insert(it, circlepush);
+                    //cout << circles_vec[index_insert].Ox << " " << circles_vec[index_insert].Oy << " " << circles_vec[index_insert].R << endl;
+                    cout << "lets see how we can insert element into list" << endl;
+                    InsertList(&ptr, index_insert - 1, circlepush);
+                    Print(ptr);
+                    cout << endl << endl << endl;
+                }
             }
         }
         else if (FirstAction == 2)
