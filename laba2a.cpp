@@ -226,115 +226,180 @@ int main()
 
     srand(static_cast<unsigned int>(time(0)));
 
-    int FirstAction;
-    cout << "1 - interactive dialog mode\n2 - demonstraion\n3 - banchmark" << endl << endl;
-    cin >> FirstAction;
-    
-    if (FirstAction == 1)
+    int FirstAction = 10;
+    int el_counter = 0;
+
+    Circle circles_mas[50] = {};
+    vector<Circle> circles_vec;
+    List* ptr = NULL;
+
+    while (FirstAction != 0)
     {
-        // interactive mode
-    }
-    else if(FirstAction == 2)
-    {
-        // demonstrational mode
+        cout << "1 - interactive dialog mode\n2 - demonstraion\n3 - banchmark\n4 - exit(push 0)" << endl << endl;
+        cin >> FirstAction;
 
-        // 1 - create empty
-        cout << "option 1: create empty list" << endl;
-        Circle circles_mas [50] = {};
-        vector<Circle> circles_vec;
-        List* ptr = NULL;
-        cout << "empty list created" << endl << endl;
-
-        // 1.5 fill it with rand shit
-        cout << "// i want to make some random circles: (additional)" << endl;
-        int AmountNodes = 0;
-        while (AmountNodes < 20)   // amount of nodes
-            AmountNodes = rand() % 50;
-        cout << "lets have " << AmountNodes << " circles" << endl << endl;
-        FillList(circles_mas, circles_vec, &ptr, AmountNodes);
-        Circle flag_circle;
-        cout << endl << endl << endl;
-
-        // 2 - pushing element to the end
-        cout << "option 2: push element to the end" << endl;
-        Circle circleadditional = {4.5, 3.22, 8.0};
-        cout << "error. can not add elements to a fixed arr" << endl;
-        circles_vec.resize(AmountNodes);
-        circles_vec.push_back(circleadditional);
-        cout << "last vec element" << endl;
-        cout << circles_vec[AmountNodes-1].Ox << " " << circles_vec[AmountNodes-1].Oy << " " << circles_vec[AmountNodes-1].R << endl;
-        cout << "added element: " << endl;
-        cout << circles_vec[AmountNodes].Ox << " " << circles_vec[AmountNodes].Oy << " " << circles_vec[AmountNodes].R << endl;
-        AddToTheEnd(&ptr, circleadditional);
-        Print(ptr);
-        cout << endl << endl << endl;
-
-        // 3 - insert before index
-        cout << "option 3: insert before index" << endl;
-        cout << "can not add element to a fixed array. memory limit" << endl;
-        int index = 3; // index >= 1
-        vector <Circle>::iterator it;
-        it = circles_vec.begin() + index;
-        cout << "lets see how we can insert element into vec" << endl;
-        cout << circles_vec[index].Ox << " " << circles_vec[index].Oy << " " << circles_vec[index].R << endl;
-        circles_vec.insert (it, circleadditional);
-        cout << circles_vec[index].Ox << " " << circles_vec[index].Oy << " " << circles_vec[index].R << endl;
-        cout << "lets see how we can insert element into list" << endl;
-        InsertList(&ptr, index - 1, circleadditional);
-        Print(ptr);
-        cout << endl << endl << endl;
-
-        // 4 - delete el with index
-        cout << "option 4: delete el with index. " << endl;
-        DeleteElementArray(circles_mas, index, AmountNodes);
-        cout << "pre-last element (was last)" << endl;
-        cout << circles_mas[AmountNodes-1].Ox << " " << circles_mas[AmountNodes-1].Oy << " " << circles_mas[AmountNodes - 1].R  << endl;
-        cout << "last element" << endl;
-        cout << circles_mas[AmountNodes].Ox << " " << circles_mas[AmountNodes].Oy << " " << circles_mas[AmountNodes].R << endl;
-        // delete sym from vec
-        cout << "this was 4 el:" << endl;
-        cout << circles_vec[index].Ox << " " << circles_vec[index].Oy << " " << circles_vec[index].R << endl;
-        cout << "4-th element now:" << endl;
-        circles_vec.erase(circles_vec.begin() + index);
-        cout << circles_vec[index].Ox << " " << circles_vec[index].Oy << " " << circles_vec[index].R << endl;
-        //delete list el
-        DeleteEl(&ptr, index-2, circleadditional);
-        Print(ptr);
-        cout << endl << endl << endl;
-
-        // 5 - set and get
-        int index2 = 3;
-        cout << "index " << index2 << endl;
-        cout << "lets get the element from array: " << endl;
-        cout << circles_mas[index2 - 1].Ox << " " << circles_mas[index2 - 1].Oy << " " << circles_mas[index2 - 1].R << endl;
-        cout << "lets get the element from array: " << endl;
-        cout << circles_vec[index2 - 1].Ox << " " << circles_vec[index2 - 1].Oy << " " << circles_vec[index2 - 1].R << endl;
-        // list index
-        GetListElement(ptr, index2-1);
-        cout << endl << endl << endl;
-
-        // 6 - list length
-        cout << "option 6 - list length" << endl;
-        cout << "arr: " << 50 << endl;
-        cout << "vec: " << circles_vec.size() << endl;
-        List* p = ptr;
-        int counter = 0;
-        while (p)
+        if (FirstAction == 1)
         {
-            p = p->next;
-            counter++;
-        }
-        cout << "list: " << counter << endl;
-    }
-    else if (FirstAction == 3)
-    {
-        // benchmark mode
-    }
-    else
-    {
-        cout << "error. you enetered a wrong number" << endl;
-    }
+            // interactive mode
 
+            cout << "choose the option (1-5)\n";
+            cout << "1 - create empty list\n";
+            cout << "2 - push elelement to the end\n";
+            cout << "3 - insert before index\n";
+            cout << "4 - delete element by index\n";
+            cout << "5 - set and get element by index\n";
+            cout << "6 - print list length\n";
+            cout << endl << endl << endl;
+
+            int SecondOption;
+            cin >> SecondOption;
+
+            if (SecondOption == 1)
+            {
+                // 1 - create empty
+                cout << "option 1: create empty list" << endl;
+                cout << "empty list created (arr, vec, list)" << endl << endl;
+            }
+            else if (SecondOption == 2)
+            {
+                // 2 - pushing element to the end
+                cout << "option 2: push element to the end" << endl;
+                Circle circlepush;
+                cout << "enter the circle's X" << endl;
+                cin >> circlepush.Ox;
+                cout << "enter the circle's Y" << endl;
+                cin >> circlepush.Oy;
+                cout << "enter the circle's Z" << endl;
+                cin >> circlepush.R;
+                cout << el_counter << endl;
+                if (el_counter == 0)
+                {
+                    cout << "U FUCK U FUKC U" << endl;
+                    ptr = new List;
+                    ptr->circle.Ox = circlepush.Ox;
+                    ptr->circle.Oy = circlepush.Oy;
+                    ptr->circle.R = circlepush.R;
+                    ptr->next = NULL;
+                    el_counter++;
+                }
+                else if (SecondOption == 3)
+                {
+
+                }
+                else
+                {
+                    AddToTheEnd(&ptr, circlepush);
+                }
+                Print(ptr);
+                cout << endl << endl << endl;
+            }
+        }
+        else if (FirstAction == 2)
+        {
+            // demonstrational mode
+
+            // 1 - create empty
+            cout << "option 1: create empty list" << endl;
+            Circle circles_mas_demo[50] = {};
+            vector<Circle> circles_vec_demo;
+            List* ptrdemo = NULL;
+            cout << "empty list created (arr, vec, list)" << endl << endl;
+
+            // 1.5 fill it with rand shit
+            cout << "// i want to make some random circles: (additional)" << endl;
+            int AmountNodes = 0;
+            while (AmountNodes < 20)   // amount of nodes
+                AmountNodes = rand() % 50;
+            cout << "lets have " << AmountNodes << " circles" << endl << endl;
+            FillList(circles_mas_demo, circles_vec_demo, &ptrdemo, AmountNodes);
+            Circle flag_circle;
+            cout << endl << endl << endl;
+
+            // 2 - pushing element to the end
+            cout << "option 2: push element to the end" << endl;
+            Circle circleadditional = { 4.5, 3.22, 8.0 };
+            cout << "error. can not add elements to a fixed arr" << endl;
+            circles_vec_demo.resize(AmountNodes);
+            circles_vec_demo.push_back(circleadditional);
+            cout << "last vec element" << endl;
+            cout << circles_vec_demo[AmountNodes - 1].Ox << " " << circles_vec_demo[AmountNodes - 1].Oy << " " << circles_vec_demo[AmountNodes - 1].R << endl;
+            cout << "added element: " << endl;
+            cout << circles_vec_demo[AmountNodes].Ox << " " << circles_vec_demo[AmountNodes].Oy << " " << circles_vec_demo[AmountNodes].R << endl;
+            AddToTheEnd(&ptrdemo, circleadditional);
+            Print(ptrdemo);
+            cout << endl << endl << endl;
+
+            // 3 - insert before index
+            cout << "option 3: insert before index" << endl;
+            cout << "can not add element to a fixed array. memory limit" << endl;
+            int index = 3; // index >= 1
+            vector <Circle>::iterator it;
+            it = circles_vec_demo.begin() + index;
+            cout << "lets see how we can insert element into vec" << endl;
+            cout << circles_vec_demo[index].Ox << " " << circles_vec_demo[index].Oy << " " << circles_vec_demo[index].R << endl;
+            circles_vec_demo.insert(it, circleadditional);
+            cout << circles_vec_demo[index].Ox << " " << circles_vec_demo[index].Oy << " " << circles_vec_demo[index].R << endl;
+            cout << "lets see how we can insert element into list" << endl;
+            InsertList(&ptrdemo, index - 1, circleadditional);
+            Print(ptrdemo);
+            cout << endl << endl << endl;
+
+            // 4 - delete el with index
+            cout << "option 4: delete el with index. " << endl;
+            DeleteElementArray(circles_mas_demo, index, AmountNodes);
+            cout << "pre-last element (was last)" << endl;
+            cout << circles_mas_demo[AmountNodes - 1].Ox << " " << circles_mas_demo[AmountNodes - 1].Oy << " " << circles_mas_demo[AmountNodes - 1].R << endl;
+            cout << "last element" << endl;
+            cout << circles_mas_demo[AmountNodes].Ox << " " << circles_mas_demo[AmountNodes].Oy << " " << circles_mas_demo[AmountNodes].R << endl;
+            // delete sym from vec
+            cout << "this was 4 el:" << endl;
+            cout << circles_vec_demo[index].Ox << " " << circles_vec_demo[index].Oy << " " << circles_vec_demo[index].R << endl;
+            cout << "4-th element now:" << endl;
+            circles_vec_demo.erase(circles_vec_demo.begin() + index);
+            cout << circles_vec_demo[index].Ox << " " << circles_vec_demo[index].Oy << " " << circles_vec_demo[index].R << endl;
+            //delete list el
+            DeleteEl(&ptr, index - 2, circleadditional);
+            Print(ptrdemo);
+            cout << endl << endl << endl;
+
+            // 5 - set and get
+            int index2 = 3;
+            cout << "index " << index2 << endl;
+            cout << "lets get the element from array: " << endl;
+            cout << circles_mas_demo[index2 - 1].Ox << " " << circles_mas_demo[index2 - 1].Oy << " " << circles_mas_demo[index2 - 1].R << endl;
+            cout << "lets get the element from array: " << endl;
+            cout << circles_vec_demo[index2 - 1].Ox << " " << circles_vec_demo[index2 - 1].Oy << " " << circles_vec_demo[index2 - 1].R << endl;
+            // list index
+            GetListElement(ptrdemo, index2 - 1);
+            cout << endl << endl << endl;
+
+            // 6 - list length
+            cout << "option 6 - list length" << endl;
+            cout << "arr: " << 50 << endl;
+            cout << "vec: " << circles_vec.size() << endl;
+            List* p = ptrdemo;
+            int counter = 0;
+            while (p)
+            {
+                p = p->next;
+                counter++;
+            }
+            cout << "list: " << counter << endl;
+            cout << endl << endl << endl;
+        }
+        else if (FirstAction == 3)
+        {
+            // benchmark mode
+        }
+        else if (FirstAction == 0)
+        {
+        cout << "EXIT" << endl << endl;
+        }
+        else
+        {
+            cout << "error. you enetered a wrong number" << endl;
+        }
+    }
     return 0;
 }
 
