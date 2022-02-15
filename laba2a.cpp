@@ -170,7 +170,7 @@ void DeleteElementArray(Circle circles_mas[], int index, int AmountNodes)
     }
 }
 
-void DeleteEl(List** u, int index, Circle circleadditional)
+void DeleteEl(List** u, int index)
 {
     if (*u == nullptr)
         return;
@@ -265,12 +265,15 @@ int main()
                 // 2 - pushing element to the end
                 cout << "option 2: push element to the end" << endl;
                 Circle circlepush;
+
                 cout << "enter the circle's X" << endl;
                 cin >> circlepush.Ox;
                 cout << "enter the circle's Y" << endl;
                 cin >> circlepush.Oy;
                 cout << "enter the circle's Z" << endl;
                 cin >> circlepush.R;
+                //cout << "element added to the vec sucessfully" << endl;
+                //circles_vec.push_back(circlepush);
                 //cout << el_counter << endl;
                 if (el_counter == 0)
                 {
@@ -323,6 +326,37 @@ int main()
                     cout << endl << endl << endl;
                 }
             }
+            else if (SecondAction == 4)
+            {
+                cout << "option 4: delete el with index. " << endl;
+                int index_insert;
+                cout << "enter the index" << endl;
+                cin >> index_insert;
+                DeleteEl(&ptr, index_insert - 2);
+                Print(ptr);
+                cout << endl << endl << endl;
+            }
+            else if (SecondAction == 5)
+            {
+
+            }
+            else if (SecondAction == 6)
+            {
+                cout << "option 6 - list length" << endl;
+                cout << "arr: " << 50 << endl;
+                cout << "vec: " << circles_vec.size() << endl;
+                List* p = ptr;
+                int counter = 0;
+                while (p)
+                {
+                    p = p->next;
+                    counter++;
+                }
+                cout << "list: " << counter << endl;
+                cout << endl << endl << endl;
+            }
+            else
+                cout << "wrong number!" << endl;
         }
         else if (FirstAction == 2)
         {
@@ -388,7 +422,7 @@ int main()
             circles_vec_demo.erase(circles_vec_demo.begin() + index);
             cout << circles_vec_demo[index].Ox << " " << circles_vec_demo[index].Oy << " " << circles_vec_demo[index].R << endl;
             //delete list el
-            DeleteEl(&ptr, index - 2, circleadditional);
+            DeleteEl(&ptr, index - 2);
             Print(ptrdemo);
             cout << endl << endl << endl;
 
@@ -406,7 +440,7 @@ int main()
             // 6 - list length
             cout << "option 6 - list length" << endl;
             cout << "arr: " << 50 << endl;
-            cout << "vec: " << circles_vec.size() << endl;
+            cout << "vec: " << circles_vec_demo.size() << endl;
             List* p = ptrdemo;
             int counter = 0;
             while (p)
