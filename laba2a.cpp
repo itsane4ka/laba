@@ -198,6 +198,25 @@ void DeleteEl(List** u, int index, Circle circleadditional)
     }
 }
 
+void GetListElement(List* head, int index2)
+{
+    List* p = head;
+    int counter = 0;
+    cout << "Spisok:" << endl;
+    while (p)
+    {
+        if (counter == index2)
+        {
+            cout << "X: " << p->circle.Ox << "\t";
+            cout << "Y: " << p->circle.Oy << "\t";
+            cout << "R: " << p->circle.R << "\n";
+            break;
+        }
+        counter++;
+        p = p->next;
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");
@@ -285,7 +304,14 @@ int main()
 
         // 5 - set and get
         int index2 = 3;
-
+        cout << "index " << index2 << endl;
+        cout << "lets get the element from array: " << endl;
+        cout << circles_mas[index2 - 1].Ox << " " << circles_mas[index2 - 1].Oy << " " << circles_mas[index2 - 1].R << endl;
+        cout << "lets get the element from array: " << endl;
+        cout << circles_vec[index2 - 1].Ox << " " << circles_vec[index2 - 1].Oy << " " << circles_vec[index2 - 1].R << endl;
+        // list index
+        GetListElement(ptr, index2-1);
+        cout << endl << endl << endl;
 
         // 6 - list length
         cout << "option 6 - list length" << endl;
