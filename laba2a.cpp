@@ -219,17 +219,24 @@ void GetListElement(List* head, int index2)
 
 void AddToArray(Circle *circles_mas, int index, Circle circleinsert, int el_counter)
 {
+    Circle circles_mas_additional[50] = {};
     for (int i = 0; i < el_counter + 1; i++)
     {
         if (i == index)
         {
-            circles_mas[i] = circleinsert;
-            for (int j = i+1; j < el_counter - 1; j++)
+            circles_mas_additional[i] = circleinsert;
+            for (int j = i + 1; j < el_counter + 1; j++)
             {
-                circles_mas[j] = circles_mas[j + 1];
+                circles_mas_additional[j] = circles_mas[j - 1];
+            }
+            for (int t = 0; t < el_counter + 1; t++)
+            {
+                circles_mas[t] = circles_mas_additional[t];
             }
             return;
         }
+        else
+            circles_mas_additional[i] = circles_mas[i];
     }
 }
 
