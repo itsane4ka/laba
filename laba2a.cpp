@@ -33,7 +33,7 @@ void List_Creation(List** u, int AmountNodes)
     srand(static_cast<unsigned int>(time(0)));
     //first node
     *u = new List;
-    (*u)->circle.Ox = rand() % 10 + (double) rand() / RAND_MAX;
+    (*u)->circle.Ox = rand() % 10 + (double)rand() / RAND_MAX;
     (*u)->circle.Oy = rand() % 10 + (double)rand() / RAND_MAX;
     (*u)->circle.R = rand() % 10 + (double)rand() / RAND_MAX;
     (*u)->next = NULL;
@@ -71,7 +71,7 @@ void Print(List* u)
     }
 }
 
-void FillList(Circle circles_mas[], vector<Circle> &circles_vec, List **ptr, int AmountNodes)
+void FillList(Circle circles_mas[], vector<Circle>& circles_vec, List** ptr, int AmountNodes)
 {
     cout << "amount of nodes: " << AmountNodes << endl << endl;
     // fixed array
@@ -160,11 +160,11 @@ void DeleteElementArray(Circle circles_mas[], int index, int AmountNodes)
     {
         if (i == index)
         {
-            for (int j = i; j < AmountNodes -1; j++)
+            for (int j = i; j < AmountNodes - 1; j++)
             {
                 circles_mas[j] = circles_mas[j + 1];
             }
-            circles_mas[AmountNodes] = {0, 0, 0};
+            circles_mas[AmountNodes] = { 0, 0, 0 };
             break;
         }
     }
@@ -182,7 +182,7 @@ void DeleteEl(List** u, int index)
         return;
     }
     List* t1 = t->next;
-    
+
     int counter = 0;
     while (t1)
     {
@@ -217,7 +217,23 @@ void GetListElement(List* head, int index2)
     }
 }
 
-void vecOutput(vector<Circle>&circles_vec)
+void AddToArray(Circle *circles_mas, int index, Circle circleinsert, int el_counter)
+{
+    for (int i = 0; i < el_counter + 1; i++)
+    {
+        if (i == index)
+        {
+            circles_mas[i] = circleinsert;
+            for (int j = i+1; j < el_counter - 1; j++)
+            {
+                circles_mas[j] = circles_mas[j + 1];
+            }
+            return;
+        }
+    }
+}
+
+void vecOutput(vector<Circle>& circles_vec)
 {
     cout << "vec: " << endl;
     for (int i = 0; i < circles_vec.size(); i++)
@@ -257,6 +273,7 @@ int main()
         cout << "1 - interactive dialog mode\n2 - demonstraion\n3 - banchmark\n4 - exit(push 0)" << endl << endl;
         cin >> FirstAction;
 
+        cout << "elements: " << el_counter << endl;
         if (FirstAction == 1)
         {
             // interactive mode
@@ -356,29 +373,31 @@ int main()
                         cin >> circleinsert.R;
                         cout << endl << endl << endl;
 
+                        //arr
+                        if (el_counter == 50)
+                            cout << "memory limit. error" << endl;
+                        else
+                        {
+                            AddToArray(circles_mas, index_insert - 1, circleinsert, el_counter);
+                            arrOutput(circles_mas, el_counter + 1);
+                        }
+
                         //vec
                         vector <Circle>::iterator it;
-                        it = circles_vec.begin() + index_insert;
+                        it = circles_vec.begin() + index_insert - 1;
                         circles_vec.insert(it, circleinsert);
                         vecOutput(circles_vec);
 
                         //list
-                        cout << "option 3: insert element" << endl;
-                        Circle circlepush;
-                        cout << "enter the circle's X" << endl;
-                        cin >> circlepush.Ox;
-                        cout << "enter the circle's Y" << endl;
-                        cin >> circlepush.Oy;
-                        cout << "enter the circle's Z" << endl;
-                        cin >> circlepush.R;
 
- 
                         cout << "lets see how we can insert element into list" << endl;
-                        InsertList(&ptr, index_insert - 1, circlepush);
+                        InsertList(&ptr, index_insert - 1, circleinsert);
                         Print(ptr);
                         cout << endl << endl << endl;
+
+                        el_counter++;
                     }
-                }    
+                }
             }
             else if (SecondAction == 4)
             {
@@ -523,7 +542,7 @@ int main()
         }
         else if (FirstAction == 0)
         {
-        cout << "EXIT" << endl << endl;
+            cout << "EXIT" << endl << endl;
         }
         else
         {
