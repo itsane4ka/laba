@@ -1,4 +1,4 @@
-﻿// laba2bnum10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+// laba2bnum10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -33,10 +33,9 @@ struct List {
 
 void circleRndomising(array <Circle, 10>& circlepush)
 {
-    int lower_bound = 0;
-    int upper_bound = 10;
-    default_random_engine gen;
-    uniform_real_distribution<> dist(lower_bound, upper_bound);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(1, 9);
 
     for (int i = 0; i < circlepush.size(); i++)
     {
@@ -86,26 +85,63 @@ void AddToTheEnd(List** u, Circle circleadditional)
     p->next = 0;
 }
 
+void deleteNode(List** head, List* value)
+{
+    if (*head == 0) // исходный список пуст 
+    {
+        return;
+    }
+
+    List* t = *head;
+    if (t->circle.Ox == value->circle.Ox) // исходный список не пуст 
+    {
+        *head = t->next;
+        delete t;
+        return;
+    }
+
+    List* t1 = t->next;
+
+    while (t1)
+    {
+        if (t1->circle.Ox == value->circle.Ox)
+        {
+            t->next = t1->next;
+            delete t1;
+            return;
+        }
+        t = t1;
+        t1 = t1->next;
+    }
+}
+
 void remove_multi_values(List **valuehead, List** listhead)
 {
     List* ptr = new List;
     ptr = *listhead;
+    List* head = ptr;
 
     List* valueptr = new List;
     valueptr = *valuehead;
 
+    Print(ptr);
+
+    int counter = 0;
+    bool deleting = false;
     while (ptr)
     {
+        deleting = false;
         while (valueptr)
         {
-            if (ptr->circle.Ox == valueptr->circle.Ox && ptr->circle.Oy == valueptr->circle.Oy && ptr->circle.R == valueptr->circle.R)
-            {
-
-            }
+            //cout << ptr->circle.Ox << " " << valueptr->circle.Ox << endl;
+            deleteNode(&head, valueptr);
             valueptr = valueptr->next;
         }
+        valueptr = *valuehead;
         ptr = ptr->next;
-    }
+        counter++;
+    } 
+    Print(head);
 }
 
 void Demo()
@@ -130,7 +166,6 @@ void Demo()
     AddToTheEnd(&values, {3, 3, 3});
     AddToTheEnd(&values, {7, 7, 7});
     AddToTheEnd(&values, {8, 8, 8});
-    AddToTheEnd(&values, {9, 9, 9}); 
 
     Print(values);
     remove_multi_values(&values, &ptrhead);
@@ -138,7 +173,33 @@ void Demo()
 
 void Interactive()
 {
+    array <Circle, 10> circlepush;
+    circleRndomising(circlepush);
 
+    List* ptrhead = new List;
+    ptrhead->circle.Ox = circlepush[0].Ox;
+    ptrhead->circle.Oy = circlepush[0].Oy;
+    ptrhead->circle.R = circlepush[0].R;
+    ptrhead->next = NULL;
+
+    for (int i = 1; i < 10; i++)
+    {
+        AddToTheEnd(&ptrhead, circlepush[i]);
+    }
+    Print(ptrhead);
+
+    List* values = nullptr;
+    int AmountValues;
+    cin >> AmountValues;
+    Circle circleadditional;
+    for (int i = 0; i < AmountValues; i++)
+    {
+        cin >> circleadditional.Ox >> circleadditional.Oy >> circleadditional.R;
+        AddToTheEnd(&values, circleadditional);
+    }
+
+    Print(values);
+    remove_multi_values(&values, &ptrhead);
 }
 
 int main()
