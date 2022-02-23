@@ -176,6 +176,9 @@ void reverse(int index1, int index2, List** head)
         ptr2 = ptr2->next;
         counter++;
     }
+    delete flag;
+    delete ptr2;
+    delete end2;
 }
 
 void Demo()
@@ -199,6 +202,7 @@ void Demo()
 
     int index1 = 3, index2 = 7;
     reverse(index1, index2, &ptrhead);
+    delete ptrhead;
 }
 
 void Interactive()
@@ -223,6 +227,7 @@ void Interactive()
     int index1, index2;
     cin >> index1 >> index2;
     reverse(index1, index2, &ptrhead);
+    delete ptrhead;
 }
 
 int main()
