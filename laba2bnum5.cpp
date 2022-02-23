@@ -124,8 +124,6 @@ void remove_multi_values(List **valuehead, List** listhead)
     List* valueptr = new List;
     valueptr = *valuehead;
 
-    Print(ptr);
-
     int counter = 0;
     bool deleting = false;
     while (ptr)
@@ -169,6 +167,9 @@ void Demo()
 
     Print(values);
     remove_multi_values(&values, &ptrhead);
+
+    delete ptrhead;
+    delete values;
 }
 
 void Interactive()
@@ -200,6 +201,9 @@ void Interactive()
 
     Print(values);
     remove_multi_values(&values, &ptrhead);
+
+    delete ptrhead;
+    delete values;
 }
 
 int main()
