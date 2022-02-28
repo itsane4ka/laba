@@ -1,4 +1,4 @@
-﻿// laba2bnum8.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+// laba2bnum8.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -109,7 +109,6 @@ List* interleave(List* values1, List* values2, int size1, int size2)
             values2 = values2->next;
         }
     }
-    Print(res);
     return res;
 }
 
@@ -145,6 +144,7 @@ void Demo()
     Print(values2);
     
     List* res = interleave(values1, values2, size1, size2);
+    Print(res);
 
     delete values1;
     delete values2;
@@ -152,7 +152,51 @@ void Demo()
 
 void Interactive()
 {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dist(1, 10);
 
+    List* values1 = nullptr;
+    int size1;
+    cout << "enter 1 list size" << endl;
+    cin >> size1;
+
+    List* values2 = nullptr;
+    int size2;
+    cout << "enter 2 list size" << endl;
+    cin >> size2;
+
+    Circle circle1;
+    for (int i = 0; i < size1; i++)
+    {
+        printf("1:\nenter X\n");
+        cin >> circle1.Ox;
+        printf("ener Y\n");
+        cin >> circle1.Oy;
+        printf("ener Y\n");
+        cin >> circle1.R;
+        AddToTheEnd(&values1, circle1);
+    }
+    Print(values1);
+
+    Circle circle2;
+    for (int i = 0; i < size2; i++)
+    {
+        printf("2:\nener X\n");
+        cin >> circle2.Ox;
+        printf("ener Y\n");
+        cin >> circle2.Oy;
+        printf("ener Y/n");
+        cin >> circle2.R;
+        AddToTheEnd(&values2, circle2);
+    }
+    Print(values2);
+
+    List* res = interleave(values1, values2, size1, size2);
+    Print(res);
+
+    delete values1;
+    delete values2;
 }
 
 int main()
