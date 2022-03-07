@@ -23,21 +23,22 @@
 
 using namespace sf;
 
-const int size = 30;
- 
-std::string operators[] = { "bool", "bool", "bool", "bool", "bool", "bool",  // 6
- "continue", "try", "bool", "catch", "bool", "int", "bool", "bool", "bool", "bool", // 16
- "bool", "bool", "array", "void", "bool", "bool", "cash", "programming", "pow", // 24
- "bool", "bool", "bool", "bool", "bool" // 30
-};
+const int size = 120;
 
-/*
-std::string operators[] = { "if", "else", "switch", "case", "default", "break",  // 6
+std::string operators[] = { 
+	// c++
+ "if", "else", "switch", "case", "default", "break",  // 6
  "continue", "try", "goto", "catch", "const", "int", "long", "float", "double", "bool", // 16
  "for", "while", "array", "void", "include", "cmath", "cash", "programming", "pow", // 24
- "sizeof", "sqrt", "enum", "delete", "cmath" // 30
+ "sizeof", "sqrt", "enum", "delete", "cmath", // 30
+	// python
+ "python", "print", "type", "int", "float", "class", "bool", "elif", "while", "input", // 11
+ "True", "const", "def", "range", "raise", "exeption", "except", "next", "list", "exit",
+ "cmp", "import", "return", "if", "match", "zip", "remove", "insert", "nums", "plot"
+	// javascript
+
+	// html
 };
-*/
 
 enum eLetter {
 	a, b, c, d, e, f, g, h, i, j, k, l,
@@ -53,8 +54,8 @@ int getRandomOperator()
 	return (dist(gen));
 }
 
-int main()
-{	
+void stamina()
+{
 	// obsiously, gendering the window function
 	RenderWindow window(VideoMode(700, 200), "IT-stamina");
 
@@ -65,13 +66,34 @@ int main()
 	// top text output (about IT-stamina project)
 	Font font;
 	if (!font.loadFromFile("edf7f-eirik-raude.ttf"))
-		return 0;
+		exit(0);
 	Text text1;
 	text1.setFont(font);
 	text1.setString("This is IT-stamina! Train your code-typing skills with us and make your \nown records!");
 	text1.setCharacterSize(22);
 	text1.setFillColor(Color(0, 0, 0));
 	text1.move(26, 25);
+
+	// top text 
+	Text choose_language;
+	choose_language.setFont(font);
+	choose_language.setString("Choose your programming language!");
+	choose_language.setCharacterSize(30);
+	choose_language.setFillColor(Color(255, 255, 255));
+	choose_language.move(145, 15);
+	choose_language.setOutlineThickness(1.f);
+	choose_language.setOutlineColor(Color::Black);
+
+	// c++
+	Text c;
+	c.setFont(font);
+	c.setString("c++");
+	c.setCharacterSize(30);
+	c.setFillColor(Color(255, 255, 255));
+	c.move(25, 35);
+	c.setOutlineThickness(1.f);
+	c.setOutlineColor(Color::Black);
+
 
 
 	// timing bottom text
@@ -105,7 +127,7 @@ int main()
 	rectanglehelp.setSize(Vector2f(56.f, 24.f));
 	rectanglehelp.setOutlineThickness(2.f);
 	rectanglehelp.setOutlineColor(Color::Black);
-	rectanglehelp.setPosition(Vector2f(307.f, 165.f)); 
+	rectanglehelp.setPosition(Vector2f(307.f, 165.f));
 
 	// score bottom text
 	Text result;
@@ -160,8 +182,14 @@ int main()
 	operatorstxt.setFillColor(Color(0, 0, 0));
 	operatorstxt.move(40, 104);
 
-	// 
+	// creating texture
+	Texture mainpic;
+	mainpic.loadFromFile("C:\\programming\\igorolhovatiy\\igorolhovatiy\\choose.png");
+	Sprite sprite(mainpic);
+
+	// important variables
 	bool same_elements = false;
+	bool choosen = false;
 	int AmountSymbols = 0;
 
 	//main cycle
@@ -175,107 +203,153 @@ int main()
 				window.close();
 		}
 
-		// help
-		rectanglehelp.setOutlineColor(Color::Black);
-		if (event.type == sf::Event::MouseButtonPressed)
+		if (!choosen)
 		{
-			if (rectanglehelp.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y})) )
-			{
-				rectanglehelp.setOutlineColor(Color::Red);
-				ShellExecuteW(0, 0, L"www.google.com", NULL, NULL, SW_SHOW);
-			}
+
 		}
-
-		// getting text + check if it is a letter/number + main func
-		window.setKeyRepeatEnabled(false);
-		if (event.type == Event::TextEntered)
+		else if (choosen)
 		{
-			if (event.text.unicode << 128)
+			// help
+			rectanglehelp.setOutlineColor(Color::Black);
+			if (event.type == sf::Event::MouseButtonPressed)
 			{
-				std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << " !! " << last_enterd << std::endl;
-				letter_entered = static_cast<char>(event.text.unicode);
-
-				if (letter_entered != last_enterd && strwords[0] == letter_entered)
+				if (rectanglehelp.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					same_elements = false;
-
-					if (strwords[0] == strwords[1])
-						same_elements = true;
-
-					// deleting the entered symbol
-					strwords.erase(strwords.begin());
-					operatorstxt.setString(strwords);
-
-					// increasing the amount of symbols
-					if (timing > 0)
-					{
-						AmountSymbols++;
-						std::cout << "SSSSSSSSSSSSSSSSSs    " << AmountSymbols << std::endl;
-					}
-					
-					// adding new word if the last is done
-					if (strwords[1] == ' ')
-					{
-						strwords = strwords + operators[getRandomOperator()] + ' ';
-						operatorstxt.setString(strwords);
-						words_score++;
-					}
-		
-					if (!same_elements)
-						last_enterd = letter_entered;
-					else
-						last_enterd = "trash";
+					rectanglehelp.setOutlineColor(Color::Red);
+					ShellExecuteW(0, 0, L"www.google.com", NULL, NULL, SW_SHOW);
 				}
 			}
+			std::cout << ".................." << std::endl;
+			std::cout << "letter_entered " << letter_entered << std::endl;
+			std::cout << "last_enterd " << last_enterd << std::endl;
+			std::cout << "string " << strwords << std::endl;
+			std::cout << ".................." << std::endl;
+			// getting text + check if it is a letter/number + main func
+			window.setKeyRepeatEnabled(false);
+			if (event.type == Event::TextEntered)
+			{
+				if (event.text.unicode << 128)
+				{
+					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << " !! " << last_enterd << std::endl;
+					letter_entered = static_cast<char>(event.text.unicode);
+
+					if (letter_entered != last_enterd && strwords[0] == letter_entered)
+					{
+						if (same_elements)
+						{
+							strwords.insert(strwords.begin() + 1, strwords[0]);
+						}
+
+						std::cout << ".......BEFORE ERASING..........." << std::endl;
+						std::cout << "letter_entered " << letter_entered << std::endl;
+						std::cout << "last_enterd " << last_enterd << std::endl;
+						std::cout << "string " << strwords << std::endl;
+						std::cout << ".................." << std::endl;
+
+						same_elements = false;
+
+						if (strwords[0] == strwords[1])
+							same_elements = true;
+
+						// deleting the entered symbol
+						strwords.erase(strwords.begin());
+						operatorstxt.setString(strwords);
+
+						std::cout << ".......AFTER ERASING..........." << std::endl;
+						std::cout << "letter_entered " << letter_entered << std::endl;
+						std::cout << "last_enterd " << last_enterd << std::endl;
+						std::cout << "string " << strwords << std::endl;
+						std::cout << ".................." << std::endl;
+
+						// increasing the amount of symbols
+						if (timing > 0)
+						{
+							AmountSymbols++;
+							std::cout << "Amount Symbols:  " << AmountSymbols << std::endl;
+						}
+
+						// adding new word if the last is done
+						if (strwords[1] == ' ')
+						{
+							strwords = strwords + operators[getRandomOperator()] + ' ';
+							operatorstxt.setString(strwords);
+							words_score++;
+						}
+
+						if (!same_elements)
+							last_enterd = letter_entered;
+						else
+						{
+							//letter_entered = "trash";
+							last_enterd = "trash";
+							//strwords.insert(strwords.begin()+1, strwords[0]);
+							same_elements = false;
+						}
+					}
+				}
+			}
+
+			// getting correct time
+			float time = clock.getElapsedTime().asMicroseconds();
+			gameTime = gameTimeClock.getElapsedTime().asSeconds();
+			timing = leftTime - gameTime;
+
+			//convetring int to string and adding real timing
+			std::string s1 = std::to_string(timing);
+			maintime.setString("Timing: " + s1);
+
+			//convetring int to string and adding real score
+			std::string s2 = std::to_string(words_score);
+			std::string s3 = std::to_string(AmountSymbols);
+			score.setString("Score: " + s2);
+			result.setString("Score: " + s2);
+			speed.setString("Speed: " + s3);
+
+			// view all text + pic output
+			window.clear(Color(222, 202, 245, 0));
 		}
 
-		// getting correct time
-		float time = clock.getElapsedTime().asMicroseconds();
-		gameTime = gameTimeClock.getElapsedTime().asSeconds();
-		timing = leftTime - gameTime;
-
-		//convetring int to string and adding real timing
-		std::string s1 = std::to_string(timing);
-		maintime.setString("Timing: " + s1);
-
-
-		//convetring int to string and adding real score
-		std::string s2 = std::to_string(words_score);
-		std::string s3 = std::to_string(AmountSymbols);
-		score.setString("Score: " + s2);
-		result.setString("Score: " + s2);
-		speed.setString("Speed: " + s3);
-		
-		// view all text + pic output
-		window.clear(Color(222, 202, 245, 0));
-
-		// vertex line coursor
+		// vertex line coursor (behind the cycle)
 		Vertex line_without_thickness[] =
 		{
 			Vertex(Vector2f(36.f, 110.f)),
 			Vertex(Vector2f(36.f, 145.f))
 		};
 		line_without_thickness->color = Color::Black;
-		
-		if (timing > 0)
+
+		if (!choosen)
 		{
-			window.draw(rectangle);
-			window.draw(rectanglehelp);
-			if (timing % 2 == 0)
-				window.draw(line_without_thickness, 2, Lines);
-			window.draw(text1);
-			window.draw(maintime);
-			window.draw(operatorstxt);
-			window.draw(score);
-			window.draw(help);
+			window.draw(sprite);
+			window.draw(choose_language);
+			window.draw(c);
 		}
 		else
 		{
-			window.draw(result);
-			window.draw(speed);
+			if (timing > 0)
+			{
+				window.draw(rectangle);
+				window.draw(rectanglehelp);
+				if (timing % 2 == 0)
+					window.draw(line_without_thickness, 2, Lines);
+				window.draw(text1);
+				window.draw(maintime);
+				window.draw(operatorstxt);
+				window.draw(score);
+				window.draw(help);
+			}
+			else
+			{
+				window.draw(result);
+				window.draw(speed);
+			}
 		}
 
 		window.display();
 	}
+}
+
+int main()
+{	
+	stamina();
 	return 0;
 }
