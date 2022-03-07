@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string>
 #include <vector>
 #include <ctime>
@@ -32,26 +33,46 @@ std::string operators[] = {
  "for", "while", "array", "void", "include", "cmath", "cash", "programming", "pow", // 24
  "sizeof", "sqrt", "enum", "delete", "cmath", // 30
 	// python
- "python", "print", "type", "int", "float", "class", "bool", "elif", "while", "input", // 11
+ "python", "print", "type", "int", "float", "class", "bool", "elif", "while", "input",
  "True", "const", "def", "range", "raise", "exeption", "except", "next", "list", "exit",
- "cmp", "import", "return", "if", "match", "zip", "remove", "insert", "nums", "plot"
+ "cmp", "import", "return", "if", "match", "zip", "remove", "insert", "nums", "plot" //60
 	// javascript
-
+ "alert", "forEach", "eval", "uneval", "isNan", "isFinite", "parseFloat", "parseInt", 
+ "decodeURI", "decodeURIComponent", "encodeURI", "escape", "unescape", "object", "function",
+ "boolean", "symbol", "error", "EvalError", "TypeError", "RangeError", "number", "math", "string",
+ "date", "RegExp", "Array", "Map", "Set", "WeakMap", "ArrayBuffer", // 90
 	// html
+ "html", "head", "body", "title", "bgcolor", "link", "u", "pre", "vlink", "h1", "b", "i", "em",
+ "tt", "cite", "font", "blockquote", "ol", "li", "div align", "img","td", "tr", "table", "frameset",
+ "form", "select name", "textarea name", "input type", "strong" // 120
 };
 
-enum eLetter {
-	a, b, c, d, e, f, g, h, i, j, k, l,
-	m, n, o, p, q, r, s, t, u, v, w, x, y, z, SPACE
-} dir;
+enum eLanguage {
+	c_lang, py_lang, js_lang, html_lang
+} language;
 
-int getRandomOperator()
+int getRandomOperator(enum eLanguage language)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0, 29);
 
-	return (dist(gen));
+	int flag = 0;
+	switch (language)
+	{
+	case c_lang:
+		flag = gen() % 30;
+		break;
+	case py_lang:
+		flag = gen() % 30 + 30;
+		break;
+	case js_lang:
+		flag = gen() % 30 + 60;
+		break;
+	case html_lang:
+		flag = gen() % 30 + 90;
+		break;
+	}
+	return flag;
 }
 
 void stamina()
@@ -90,11 +111,67 @@ void stamina()
 	c.setString("c++");
 	c.setCharacterSize(30);
 	c.setFillColor(Color(255, 255, 255));
-	c.move(25, 35);
+	c.move(110, 65);
 	c.setOutlineThickness(1.f);
 	c.setOutlineColor(Color::Black);
 
+	// rectangle c++
+	RectangleShape rectanglec;
+	rectanglec.setSize(Vector2f(40.f, 32.f));
+	rectanglec.setOutlineThickness(2.f);
+	rectanglec.setOutlineColor(Color::Black);
+	rectanglec.setPosition(Vector2f(110.f, 70.f));
 
+	// python
+	Text py;
+	py.setFont(font);
+	py.setString("python");
+	py.setCharacterSize(30);
+	py.setFillColor(Color(255, 255, 255));
+	py.move(110, 130);
+	py.setOutlineThickness(1.f);
+	py.setOutlineColor(Color::Black);
+
+	// rectangle py
+	RectangleShape rectanglepy;
+	rectanglepy.setSize(Vector2f(80.f, 30.f));
+	rectanglepy.setOutlineThickness(2.f);
+	rectanglepy.setOutlineColor(Color::Black);
+	rectanglepy.setPosition(Vector2f(110.f, 133.f));
+
+	// java script
+	Text js;
+	js.setFont(font);
+	js.setString("JavaScript");
+	js.setCharacterSize(30);
+	js.setFillColor(Color(255, 255, 255));
+	js.move(520, 65);
+	js.setOutlineThickness(1.f);
+	js.setOutlineColor(Color::Black);
+
+	//rectangle js
+	RectangleShape rectanglejs;
+	rectanglejs.setSize(Vector2f(125.f, 32.f));
+	rectanglejs.setOutlineThickness(2.f);
+	rectanglejs.setOutlineColor(Color::Black);
+	rectanglejs.setPosition(Vector2f(520.f, 65.f));
+
+	// html
+	Text html;
+	html.setFont(font);
+	html.setString("HTML 5.0");
+	html.setCharacterSize(30);
+	html.setFillColor(Color(255, 255, 255));
+	html.move(530, 130);
+	html.setOutlineThickness(1.f);
+	html.setOutlineColor(Color::Black);
+
+	//rectangle html
+	RectangleShape rectanglehtml;
+	rectanglehtml.setSize(Vector2f(120.f, 32.f));
+	rectanglehtml.setOutlineThickness(2.f);
+	rectanglehtml.setOutlineColor(Color::Black);
+	rectanglehtml.setPosition(Vector2f(520.f, 130.f));
 
 	// timing bottom text
 	Text maintime;
@@ -165,23 +242,6 @@ void stamina()
 	std::string letter_entered;
 	std::string last_enterd = "stop";
 
-	// coding text from the app OUTPUT
-	Text operatorstxt;
-	operatorstxt.setFont(font);
-	int AmountOperators = 3;
-	std::string strwords;
-	int flag = 0;
-	for (size_t i = 0; i < 4; i++)
-	{
-		flag = getRandomOperator();
-		std::cout << operators[flag] << " " << flag << std::endl;
-		strwords = strwords + operators[flag] + ' ';
-	}
-	operatorstxt.setString(strwords);
-	operatorstxt.setCharacterSize(30);
-	operatorstxt.setFillColor(Color(0, 0, 0));
-	operatorstxt.move(40, 104);
-
 	// creating texture
 	Texture mainpic;
 	mainpic.loadFromFile("C:\\programming\\igorolhovatiy\\igorolhovatiy\\choose.png");
@@ -192,6 +252,24 @@ void stamina()
 	bool choosen = false;
 	int AmountSymbols = 0;
 
+	// coding text from the app OUTPUT
+	Text operatorstxt;
+	operatorstxt.setFont(font);
+	int AmountOperators = 3;
+	std::string strwords;
+	int flag = 0;
+	for (size_t i = 0; i < 4; i++)
+	{
+		std::cout << language << std::endl;
+		flag = getRandomOperator(language);
+		std::cout << operators[flag] << " " << flag << std::endl;
+		strwords = strwords + operators[flag] + ' ';
+	}
+	operatorstxt.setString(strwords);
+	operatorstxt.setCharacterSize(30);
+	operatorstxt.setFillColor(Color(0, 0, 0));
+	operatorstxt.move(40, 104);
+
 	//main cycle
 	while (window.isOpen())
 	{
@@ -199,16 +277,17 @@ void stamina()
 		Event event;
 		while (window.pollEvent(event))
 		{
+			// closing
 			if (event.type == Event::Closed)
 				window.close();
-		}
 
-		if (!choosen)
-		{
+			// getting fixed size
+			if (event.type == Event::Resized)
+			{
+				std::cout << "trying to resize window" << std::endl;
+				window.setSize(Vector2u(700, 200));
+			}
 
-		}
-		else if (choosen)
-		{
 			// help
 			rectanglehelp.setOutlineColor(Color::Black);
 			if (event.type == sf::Event::MouseButtonPressed)
@@ -219,11 +298,45 @@ void stamina()
 					ShellExecuteW(0, 0, L"www.google.com", NULL, NULL, SW_SHOW);
 				}
 			}
-			std::cout << ".................." << std::endl;
-			std::cout << "letter_entered " << letter_entered << std::endl;
-			std::cout << "last_enterd " << last_enterd << std::endl;
-			std::cout << "string " << strwords << std::endl;
-			std::cout << ".................." << std::endl;
+		}
+
+		if (!choosen)
+		{
+			// c++
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (rectanglec.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					// rectanglec.setOutlineColor(Color::Red);
+					language = c_lang;
+					choosen = true;
+					Sleep(500);
+				}
+				if (rectanglepy.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					// rectanglepy.setOutlineColor(Color::Red);
+					language = py_lang;
+					choosen = true;
+					Sleep(500);
+				}
+				if (rectanglejs.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					// rectanglejs.setOutlineColor(Color::Red);
+					language = js_lang;
+					choosen = true;
+					Sleep(500);
+				}
+				if (rectanglehtml.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					// rectanglehtml.setOutlineColor(Color::Red);
+					language = html_lang;
+					choosen = true;
+					Sleep(500);
+				}
+			}
+		}
+		else if (choosen)
+		{
 			// getting text + check if it is a letter/number + main func
 			window.setKeyRepeatEnabled(false);
 			if (event.type == Event::TextEntered)
@@ -239,13 +352,6 @@ void stamina()
 						{
 							strwords.insert(strwords.begin() + 1, strwords[0]);
 						}
-
-						std::cout << ".......BEFORE ERASING..........." << std::endl;
-						std::cout << "letter_entered " << letter_entered << std::endl;
-						std::cout << "last_enterd " << last_enterd << std::endl;
-						std::cout << "string " << strwords << std::endl;
-						std::cout << ".................." << std::endl;
-
 						same_elements = false;
 
 						if (strwords[0] == strwords[1])
@@ -271,7 +377,7 @@ void stamina()
 						// adding new word if the last is done
 						if (strwords[1] == ' ')
 						{
-							strwords = strwords + operators[getRandomOperator()] + ' ';
+							strwords = strwords + operators[getRandomOperator(language)] + ' ';
 							operatorstxt.setString(strwords);
 							words_score++;
 						}
@@ -319,14 +425,25 @@ void stamina()
 
 		if (!choosen)
 		{
+			// first window
 			window.draw(sprite);
 			window.draw(choose_language);
+			// window.draw(rectanglec);
 			window.draw(c);
+			// window.draw(rectanglepy);
+			window.draw(py);
+			// window.draw(rectanglejs);
+			window.draw(js);
+			// window.draw(rectanglehtml);
+			window.draw(html);
+			// window.draw(rectanglehelp);
+			window.draw(help);
 		}
 		else
 		{
 			if (timing > 0)
 			{
+				// second main window
 				window.draw(rectangle);
 				window.draw(rectanglehelp);
 				if (timing % 2 == 0)
@@ -339,6 +456,7 @@ void stamina()
 			}
 			else
 			{
+				//third result window
 				window.draw(result);
 				window.draw(speed);
 			}
