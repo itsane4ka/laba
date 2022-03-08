@@ -82,7 +82,7 @@ void stamina()
 
 	// figures angles sharpness 
 	ContextSettings settings;
-	settings.antialiasingLevel = 8;
+	settings.antialiasingLevel = 10;
 
 	// top text output (about IT-stamina project)
 	Font font;
@@ -216,6 +216,11 @@ void stamina()
 	circlehtml.setOutlineColor(Color(0, 0, 0));
 	circlehtml.move(495, 145);
 
+	// circle html_choosed
+	CircleShape circlehtml_choosed(5.f);
+	circlehtml_choosed.setFillColor(Color(50, 50, 50));
+	circlehtml_choosed.move(497, 147);
+
 	// timing bottom text
 	Text maintime;
 	maintime.setFont(font);
@@ -293,26 +298,16 @@ void stamina()
 	// important variables
 	bool same_elements = false;
 	bool choosen = false;
+	bool first_time = true;
 	bool choosenreal = false;
 	int AmountSymbols = 0;
 
-	// coding text from the app OUTPUT
+	// main opening text from the app OUTPUT
 	Text operatorstxt;
 	operatorstxt.setFont(font);
 	int AmountOperators = 3;
 	std::string strwords;
 	int flag = 0;
-	for (size_t i = 0; i < 4; i++)
-	{
-		std::cout << language << std::endl;
-		flag = getRandomOperator(language);
-		std::cout << operators[flag] << " " << flag << std::endl;
-		strwords = strwords + operators[flag] + ' ';
-	}
-	operatorstxt.setString(strwords);
-	operatorstxt.setCharacterSize(30);
-	operatorstxt.setFillColor(Color(0, 0, 0));
-	operatorstxt.move(40, 104);
 
 	//main cycle
 	while (window.isOpen())
@@ -389,6 +384,22 @@ void stamina()
 		}
 		else if (choosen)
 		{
+			if (first_time)
+			{
+				for (size_t i = 0; i < 4; i++)
+				{
+					std::cout << language << std::endl;
+					flag = getRandomOperator(language);
+					std::cout << operators[flag] << " " << flag << std::endl;
+					strwords = strwords + operators[flag] + ' ';
+				}
+				operatorstxt.setString(strwords);
+				operatorstxt.setCharacterSize(30);
+				operatorstxt.setFillColor(Color(0, 0, 0));
+				operatorstxt.move(40, 104);
+				first_time = false;
+			}
+
 			// getting text + check if it is a letter/number + main func
 			window.setKeyRepeatEnabled(false);
 			if (event.type == Event::TextEntered)
@@ -511,6 +522,10 @@ void stamina()
 					break;
 				case 2:
 					window.draw(circlejs_choosed);
+					break;
+
+				case 3:
+					window.draw(circlehtml_choosed);
 					break;
 				}
 				window.display();
