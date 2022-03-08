@@ -259,22 +259,36 @@ void stamina()
 	result.setFont(font);
 	result.setString("Score: ");
 	result.setCharacterSize(40);
-	result.setFillColor(Color::Red);
-	result.move(50, 70);
+	result.setFillColor(Color(247, 168, 24));
+	result.setOutlineColor(Color::Black);
+	result.setOutlineThickness(1.f);
+	result.move(50, 40);
 
 	// speed bottom text
 	Text speed;
 	speed.setFont(font);
 	speed.setString("Speed: ");
 	speed.setCharacterSize(40);
-	speed.setFillColor(Color::Red);
-	speed.move(50, 120);
+	speed.setFillColor(Color(247, 168, 24));
+	speed.setOutlineColor(Color::Black);
+	speed.setOutlineThickness(1.f);
+	speed.move(50, 90);
+
+	// record bottom text
+	Text recordtxt;
+	recordtxt.setFont(font);
+	recordtxt.setString("Your record: ");
+	recordtxt.setCharacterSize(40);
+	recordtxt.setFillColor(Color(247, 168, 24));
+	recordtxt.setOutlineColor(Color::Black);
+	recordtxt.setOutlineThickness(1.f);
+	recordtxt.move(460, 40);
 
 	// game timing (real amount)
 	Clock clock;
 	Clock gameTimeClock;
 	int gameTime = 0;
-	int leftTime = 60;
+	int leftTime = 10;
 	int timing = 60;
 
 	// rectangle render
@@ -301,6 +315,7 @@ void stamina()
 	bool first_time = true;
 	bool choosenreal = false;
 	int AmountSymbols = 0;
+	int startTime = 0;
 
 	// main opening text from the app OUTPUT
 	Text operatorstxt;
@@ -389,6 +404,8 @@ void stamina()
 		}
 		else if (choosen)
 		{
+			if (first_time)
+				startTime = gameTimeClock.getElapsedTime().asSeconds();
 			if (first_time)
 			{
 				for (size_t i = 0; i < 4; i++)
@@ -486,9 +503,8 @@ void stamina()
 			}
 
 			// getting correct time
-			float time = clock.getElapsedTime().asMicroseconds();
 			gameTime = gameTimeClock.getElapsedTime().asSeconds();
-			timing = leftTime - gameTime;
+			timing = leftTime - gameTime + startTime;
 
 			//convetring int to string and adding real timing
 			std::string s1 = std::to_string(timing);
@@ -580,8 +596,14 @@ void stamina()
 			else
 			{
 				//third result window
+				window.draw(sprite);
 				window.draw(result);
 				window.draw(speed);
+				window.draw(recordtxt);
+
+				// also draw help
+				window.draw(rectanglehelp);
+				window.draw(help);
 			}
 			window.display();
 		}
