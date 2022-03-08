@@ -122,6 +122,18 @@ void stamina()
 	rectanglec.setOutlineColor(Color::Black);
 	rectanglec.setPosition(Vector2f(110.f, 70.f));
 
+	// circle c
+	CircleShape circleс(7.f);
+	circleс.setFillColor(Color(255, 255, 255));
+	circleс.setOutlineThickness(2.f);
+	circleс.setOutlineColor(Color(0, 0, 0));
+	circleс.move(85, 80);
+
+	// circle c_choosed
+	CircleShape circleс_choosed(5.f);
+	circleс_choosed.setFillColor(Color(50, 50, 50));
+	circleс_choosed.move(87, 82);
+
 	// python
 	Text py;
 	py.setFont(font);
@@ -138,6 +150,18 @@ void stamina()
 	rectanglepy.setOutlineThickness(2.f);
 	rectanglepy.setOutlineColor(Color::Black);
 	rectanglepy.setPosition(Vector2f(110.f, 133.f));
+
+	// circle py
+	CircleShape circlepy(7.f);
+	circlepy.setFillColor(Color(255, 255, 255));
+	circlepy.setOutlineThickness(2.f);
+	circlepy.setOutlineColor(Color(0, 0, 0));
+	circlepy.move(85, 145);
+
+	// circle py_choosed
+	CircleShape circlepy_choosed(5.f);
+	circlepy_choosed.setFillColor(Color(50, 50, 50));
+	circlepy_choosed.move(87, 147);
 
 	// java script
 	Text js;
@@ -156,6 +180,18 @@ void stamina()
 	rectanglejs.setOutlineColor(Color::Black);
 	rectanglejs.setPosition(Vector2f(520.f, 65.f));
 
+	// circle js
+	CircleShape circlejs(7.f);
+	circlejs.setFillColor(Color(255, 255, 255));
+	circlejs.setOutlineThickness(2.f);
+	circlejs.setOutlineColor(Color(0, 0, 0));
+	circlejs.move(495, 80);
+
+	// circle js_choosed
+	CircleShape circlejs_choosed(5.f);
+	circlejs_choosed.setFillColor(Color(50, 50, 50));
+	circlejs_choosed.move(497, 82);
+
 	// html
 	Text html;
 	html.setFont(font);
@@ -172,6 +208,13 @@ void stamina()
 	rectanglehtml.setOutlineThickness(2.f);
 	rectanglehtml.setOutlineColor(Color::Black);
 	rectanglehtml.setPosition(Vector2f(520.f, 130.f));
+
+	// circle html
+	CircleShape circlehtml(7.f);
+	circlehtml.setFillColor(Color(255, 255, 255));
+	circlehtml.setOutlineThickness(2.f);
+	circlehtml.setOutlineColor(Color(0, 0, 0));
+	circlehtml.move(495, 145);
 
 	// timing bottom text
 	Text maintime;
@@ -250,6 +293,7 @@ void stamina()
 	// important variables
 	bool same_elements = false;
 	bool choosen = false;
+	bool choosenreal = false;
 	int AmountSymbols = 0;
 
 	// coding text from the app OUTPUT
@@ -308,6 +352,8 @@ void stamina()
 				if (rectanglec.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
 					// rectanglec.setOutlineColor(Color::Red);
+					c.setFillColor(Color(201, 201, 201));
+					c.setStyle(Text::Underlined);
 					language = c_lang;
 					choosen = true;
 					Sleep(500);
@@ -315,6 +361,8 @@ void stamina()
 				if (rectanglepy.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
 					// rectanglepy.setOutlineColor(Color::Red);
+					py.setFillColor(Color(211, 211, 211));
+					py.setStyle(Text::Underlined);
 					language = py_lang;
 					choosen = true;
 					Sleep(500);
@@ -322,6 +370,8 @@ void stamina()
 				if (rectanglejs.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
 					// rectanglejs.setOutlineColor(Color::Red);
+					js.setFillColor(Color(201, 201, 201));
+					js.setStyle(Text::Underlined);
 					language = js_lang;
 					choosen = true;
 					Sleep(500);
@@ -329,6 +379,8 @@ void stamina()
 				if (rectanglehtml.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
 					// rectanglehtml.setOutlineColor(Color::Red);
+					html.setFillColor(Color(201, 201, 201));
+					html.setStyle(Text::Underlined);
 					language = html_lang;
 					choosen = true;
 					Sleep(500);
@@ -341,7 +393,7 @@ void stamina()
 			window.setKeyRepeatEnabled(false);
 			if (event.type == Event::TextEntered)
 			{
-				if (event.text.unicode << 128)
+				if (event.text.unicode < 128)
 				{
 					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << " !! " << last_enterd << std::endl;
 					letter_entered = static_cast<char>(event.text.unicode);
@@ -423,21 +475,49 @@ void stamina()
 		};
 		line_without_thickness->color = Color::Black;
 
-		if (!choosen)
+		if (!choosenreal)
 		{
 			// first window
 			window.draw(sprite);
 			window.draw(choose_language);
 			// window.draw(rectanglec);
 			window.draw(c);
+			window.draw(circleс);
 			// window.draw(rectanglepy);
 			window.draw(py);
+			window.draw(circlepy);
 			// window.draw(rectanglejs);
 			window.draw(js);
+			window.draw(circlejs);
 			// window.draw(rectanglehtml);
 			window.draw(html);
-			// window.draw(rectanglehelp);
+			window.draw(circlehtml);
+
+			window.draw(rectanglehelp);
 			window.draw(help);
+
+			if (choosen)
+			{
+				std::cout << "CHOICE MADE" << std::endl;
+				std::cout << language << std::endl;
+				switch (language)
+				{
+				case 0:
+					std::cout << "looser" << std::endl;
+					window.draw(circleс_choosed);
+					break;
+				case 1:
+					window.draw(circlepy_choosed);
+					break;
+				case 2:
+					window.draw(circlejs_choosed);
+					break;
+				}
+				window.display();
+				Sleep(300);
+			}
+			else
+				window.display();
 		}
 		else
 		{
@@ -460,9 +540,9 @@ void stamina()
 				window.draw(result);
 				window.draw(speed);
 			}
+			window.display();
 		}
-
-		window.display();
+		choosenreal = choosen;
 	}
 }
 
