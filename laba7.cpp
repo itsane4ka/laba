@@ -309,6 +309,11 @@ void stamina()
 	std::string strwords;
 	int flag = 0;
 
+	// getting the first word black
+	Text firstwordtxt;
+	firstwordtxt.setFont(font);
+	std::string firstword = "";
+
 	//main cycle
 	while (window.isOpen())
 	{
@@ -388,16 +393,22 @@ void stamina()
 			{
 				for (size_t i = 0; i < 4; i++)
 				{
-					std::cout << language << std::endl;
 					flag = getRandomOperator(language);
 					std::cout << operators[flag] << " " << flag << std::endl;
 					strwords = strwords + operators[flag] + ' ';
+					if (i == 0)
+						firstword = operators[flag] + ' ';
 				}
 				operatorstxt.setString(strwords);
 				operatorstxt.setCharacterSize(30);
-				operatorstxt.setFillColor(Color(0, 0, 0));
+				operatorstxt.setFillColor(Color(70, 70, 70));
 				operatorstxt.move(40, 104);
 				first_time = false;
+
+				firstwordtxt.setString(firstword);
+				firstwordtxt.setCharacterSize(30);
+				firstwordtxt.setFillColor(Color(0, 0, 0));
+				firstwordtxt.move(40, 104);
 			}
 
 			// getting text + check if it is a letter/number + main func
@@ -409,11 +420,13 @@ void stamina()
 					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << " !! " << last_enterd << std::endl;
 					letter_entered = static_cast<char>(event.text.unicode);
 
+					// back gray text
 					if (letter_entered != last_enterd && strwords[0] == letter_entered)
 					{
 						if (same_elements)
 						{
 							strwords.insert(strwords.begin() + 1, strwords[0]);
+							firstword.insert(firstword.begin() + 1, firstword[0]);
 						}
 						same_elements = false;
 
@@ -424,7 +437,11 @@ void stamina()
 						strwords.erase(strwords.begin());
 						operatorstxt.setString(strwords);
 
-						std::cout << ".......AFTER ERASING..........." << std::endl;
+						// deleting the first word 
+						firstword.erase(firstword.begin());
+						firstwordtxt.setString(firstword);
+
+						std::cout << ".................." << std::endl;
 						std::cout << "letter_entered " << letter_entered << std::endl;
 						std::cout << "last_enterd " << last_enterd << std::endl;
 						std::cout << "string " << strwords << std::endl;
@@ -437,12 +454,22 @@ void stamina()
 							std::cout << "Amount Symbols:  " << AmountSymbols << std::endl;
 						}
 
-						// adding new word if the last is done
 						if (strwords[1] == ' ')
 						{
+							// adding new word if the last is done
 							strwords = strwords + operators[getRandomOperator(language)] + ' ';
 							operatorstxt.setString(strwords);
 							words_score++;
+
+							// making new word black
+							for (int i = 2; i < strwords.size(); i++)
+							{
+								if (strwords[i] == ' ')
+									break;
+								else
+									firstword = firstword + strwords[i];
+							}
+							firstword += ' ';
 						}
 
 						if (!same_elements)
@@ -546,6 +573,7 @@ void stamina()
 				window.draw(text1);
 				window.draw(maintime);
 				window.draw(operatorstxt);
+				window.draw(firstwordtxt);
 				window.draw(score);
 				window.draw(help);
 			}
