@@ -44,7 +44,7 @@ std::string operators[] = {
 	// html
  "html", "head", "body", "title", "bgcolor", "link", "u", "pre", "vlink", "h1", "b", "i", "em",
  "tt", "cite", "font", "blockquote", "ol", "li", "div align", "img","td", "tr", "table", "frameset",
- "form", "select name", "textarea name", "input type", "strong" // 120
+ "form", "select", "textarea", "type", "strong" // 120
 };
 
 enum eLanguage {
@@ -117,10 +117,10 @@ void stamina()
 
 	// rectangle c++
 	RectangleShape rectanglec;
-	rectanglec.setSize(Vector2f(40.f, 32.f));
+	rectanglec.setSize(Vector2f(70.f, 32.f));
 	rectanglec.setOutlineThickness(2.f);
 	rectanglec.setOutlineColor(Color::Black);
-	rectanglec.setPosition(Vector2f(110.f, 70.f));
+	rectanglec.setPosition(Vector2f(80.f, 70.f));
 
 	// circle c
 	CircleShape circleс(7.f);
@@ -146,10 +146,10 @@ void stamina()
 
 	// rectangle py
 	RectangleShape rectanglepy;
-	rectanglepy.setSize(Vector2f(80.f, 30.f));
+	rectanglepy.setSize(Vector2f(115.f, 30.f));
 	rectanglepy.setOutlineThickness(2.f);
 	rectanglepy.setOutlineColor(Color::Black);
-	rectanglepy.setPosition(Vector2f(110.f, 133.f));
+	rectanglepy.setPosition(Vector2f(80.f, 133.f));
 
 	// circle py
 	CircleShape circlepy(7.f);
@@ -175,10 +175,10 @@ void stamina()
 
 	//rectangle js
 	RectangleShape rectanglejs;
-	rectanglejs.setSize(Vector2f(125.f, 32.f));
+	rectanglejs.setSize(Vector2f(155.f, 32.f));
 	rectanglejs.setOutlineThickness(2.f);
 	rectanglejs.setOutlineColor(Color::Black);
-	rectanglejs.setPosition(Vector2f(520.f, 65.f));
+	rectanglejs.setPosition(Vector2f(490.f, 65.f));
 
 	// circle js
 	CircleShape circlejs(7.f);
@@ -204,10 +204,10 @@ void stamina()
 
 	//rectangle html
 	RectangleShape rectanglehtml;
-	rectanglehtml.setSize(Vector2f(120.f, 32.f));
+	rectanglehtml.setSize(Vector2f(143.f, 32.f));
 	rectanglehtml.setOutlineThickness(2.f);
 	rectanglehtml.setOutlineColor(Color::Black);
-	rectanglehtml.setPosition(Vector2f(520.f, 130.f));
+	rectanglehtml.setPosition(Vector2f(490.f, 130.f));
 
 	// circle html
 	CircleShape circlehtml(7.f);
