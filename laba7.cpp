@@ -76,6 +76,27 @@ int getRandomOperator(enum eLanguage language)
 	return flag;
 }
 
+void FileWork(int words_score)
+{
+	std::ifstream fin("record.txt", std::ios_base::in);
+	if (fin.is_open())
+	{
+		fin.seekg(0, std::ios::end);
+		int size = fin.tellg();
+		fin.seekg(0, std::ios::beg);
+
+		if (size == 0)
+			std::cout << "file empty";
+		fin.close();
+	}
+	else
+		std::cout << "error opening file" << std::endl;
+	/*
+	std::ofstream fout("record.txt");
+	fout << "Работа с файлами в С++";
+	fout.close(); */
+}
+
 void stamina()
 {
 	// obsiously, gendering the window function
@@ -288,7 +309,7 @@ void stamina()
 	// record bottom text
 	Text recordtxt;
 	recordtxt.setFont(font);
-	recordtxt.setString("Your record: ");
+	recordtxt.setString("Your record: \n");
 	recordtxt.setCharacterSize(40);
 	recordtxt.setFillColor(Color(247, 168, 24));
 	recordtxt.setOutlineColor(Color::Black);
@@ -626,6 +647,8 @@ void stamina()
 				std::string s5 = std::to_string(a);
 				mistakestxt.setString("Mistakes: " + s5 + "%");
 
+				//file
+				FileWork(words_score);
 				//third result window
 				window.draw(sprite);
 				window.draw(result);
