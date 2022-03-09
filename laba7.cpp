@@ -15,6 +15,7 @@
 #include <time.h>
 #include <array>
 #include <random>
+#include <iomanip>
 #include <sstream>
 #include <thread>
 #include <algorithm>
@@ -262,7 +263,7 @@ void stamina()
 	result.setFillColor(Color(247, 168, 24));
 	result.setOutlineColor(Color::Black);
 	result.setOutlineThickness(1.f);
-	result.move(50, 40);
+	result.move(50, 20);
 
 	// speed bottom text
 	Text speed;
@@ -272,7 +273,17 @@ void stamina()
 	speed.setFillColor(Color(247, 168, 24));
 	speed.setOutlineColor(Color::Black);
 	speed.setOutlineThickness(1.f);
-	speed.move(50, 90);
+	speed.move(50, 70);
+
+	// mistakes bottom text
+	Text mistakestxt;
+	mistakestxt.setFont(font);
+	mistakestxt.setString("Mistakes: ");
+	mistakestxt.setCharacterSize(40);
+	mistakestxt.setFillColor(Color(247, 168, 24));
+	mistakestxt.setOutlineColor(Color::Black);
+	mistakestxt.setOutlineThickness(1.f);
+	mistakestxt.move(50, 120);
 
 	// record bottom text
 	Text recordtxt;
@@ -288,7 +299,7 @@ void stamina()
 	Clock clock;
 	Clock gameTimeClock;
 	int gameTime = 0;
-	int leftTime = 10;
+	int leftTime = 10; // main start timing 
 	int timing = 60;
 
 	// rectangle render
@@ -316,6 +327,9 @@ void stamina()
 	bool choosenreal = false;
 	int AmountSymbols = 0;
 	int startTime = 0;
+	int GeneralSymbols = 0;
+	int mistakes_per = 0;
+	bool once_read = false;
 
 	// main opening text from the app OUTPUT
 	Text operatorstxt;
@@ -404,6 +418,7 @@ void stamina()
 		}
 		else if (choosen)
 		{
+			// getting time before beginnig
 			if (first_time)
 				startTime = gameTimeClock.getElapsedTime().asSeconds();
 			if (first_time)
@@ -468,7 +483,7 @@ void stamina()
 						if (timing > 0)
 						{
 							AmountSymbols++;
-							std::cout << "Amount Symbols:  " << AmountSymbols << std::endl;
+							std::cout << "Amount symbols:  " << AmountSymbols << std::endl;
 						}
 
 						if (strwords[1] == ' ')
@@ -488,16 +503,21 @@ void stamina()
 							}
 							firstword += ' ';
 						}
-
+					    
 						if (!same_elements)
 							last_enterd = letter_entered;
 						else
 						{
-							//letter_entered = "trash";
 							last_enterd = "trash";
 							//strwords.insert(strwords.begin()+1, strwords[0]);
 							same_elements = false;
 						}
+						once_read = true;
+					}
+					else if (letter_entered != last_enterd && strwords[0] != letter_entered && once_read)
+					{
+						GeneralSymbols++;
+						once_read = false;
 					}
 				}
 			}
@@ -510,12 +530,12 @@ void stamina()
 			std::string s1 = std::to_string(timing);
 			maintime.setString("Timing: " + s1);
 
-			//convetring int to string and adding real score
+			//convetring int to string and adding real score / speed / mistakes
 			std::string s2 = std::to_string(words_score);
 			std::string s3 = std::to_string(AmountSymbols);
 			score.setString("Score: " + s2);
-			result.setString("Score: " + s2);
-			speed.setString("Speed: " + s3);
+			result.setString("Score: " + s2 + " op-s");
+			speed.setString("Speed: " + s3 + " s/min");
 
 			// view all text + pic output
 			window.clear(Color(222, 202, 245, 0));
@@ -595,11 +615,23 @@ void stamina()
 			}
 			else
 			{
+				int a;
+				std::cout << GeneralSymbols << " " << AmountSymbols << "\n";
+				if (AmountSymbols != 0)
+					a = (int)GeneralSymbols * 100 / AmountSymbols;
+				else
+					a = 0;
+				std::cout << a << std::endl;
+				a = a - a / 100;
+				std::string s5 = std::to_string(a);
+				mistakestxt.setString("Mistakes: " + s5 + "%");
+
 				//third result window
 				window.draw(sprite);
 				window.draw(result);
 				window.draw(speed);
 				window.draw(recordtxt);
+				window.draw(mistakestxt);
 
 				// also draw help
 				window.draw(rectanglehelp);
