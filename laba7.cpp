@@ -27,7 +27,7 @@ using namespace sf;
 
 const int size = 120;
 
-std::string operators[] = { 
+std::string operators[] = {
 	// c++
  "if", "else", "switch", "case", "default", "break",  // 6
  "continue", "try", "goto", "catch", "const", "int", "long", "float", "double", "bool", // 16
@@ -38,7 +38,7 @@ std::string operators[] = {
  "True", "const", "def", "range", "raise", "exeption", "except", "next", "list", "exit",
  "cmp", "import", "return", "if", "match", "zip", "remove", "insert", "nums", "plot" //60
 	// javascript
- "alert", "forEach", "eval", "uneval", "isNan", "isFinite", "parseFloat", "parseInt", 
+ "alert", "forEach", "eval", "uneval", "isNan", "isFinite", "parseFloat", "parseInt",
  "decodeURI", "decodeURIComponent", "encodeURI", "escape", "unescape", "object", "function",
  "boolean", "symbol", "error", "EvalError", "TypeError", "RangeError", "number", "math", "string",
  "date", "RegExp", "Array", "Map", "Set", "WeakMap", "ArrayBuffer", // 90
@@ -76,25 +76,38 @@ int getRandomOperator(enum eLanguage language)
 	return flag;
 }
 
-void FileWork(int words_score)
+int FileWork(int words_score)
 {
-	std::ifstream fin("record.txt", std::ios_base::in);
-	if (fin.is_open())
-	{
-		fin.seekg(0, std::ios::end);
-		int size = fin.tellg();
-		fin.seekg(0, std::ios::beg);
+	// trying to get something from the file
+	std::string buff;
+	std::ifstream fin("record.txt");
 
-		if (size == 0)
-			std::cout << "file empty";
-		fin.close();
+	if (!fin.is_open())
+	{
+		std::cout << "Файл не может быть открыт!\n";
+		return 0;
 	}
 	else
-		std::cout << "error opening file" << std::endl;
-	/*
-	std::ofstream fout("record.txt");
-	fout << "Работа с файлами в С++";
-	fout.close(); */
+	{
+		fin >> buff;
+		if (buff == "")
+			return words_score;
+		else
+		{
+			int n = atoi(buff.c_str());
+			if (words_score > n)
+			{
+				// getting new rec to the file
+				std::string str_record = std::to_string(words_score);
+				std::ofstream fout("record.txt");
+				fout << words_score;
+				fout.close();
+				return words_score;
+			}
+			else
+				return n;
+		}
+	}
 }
 
 void stamina()
@@ -320,7 +333,7 @@ void stamina()
 	Clock clock;
 	Clock gameTimeClock;
 	int gameTime = 0;
-	int leftTime = 10; // main start timing 
+	int leftTime = 60; // main start timing 
 	int timing = 60;
 
 	// rectangle render
@@ -338,7 +351,7 @@ void stamina()
 
 	// creating texture
 	Texture mainpic;
-	mainpic.loadFromFile("C:\\programming\\igorolhovatiy\\igorolhovatiy\\choose.png");
+	mainpic.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\choose.png");
 	Sprite sprite(mainpic);
 
 	// important variables
@@ -524,7 +537,7 @@ void stamina()
 							}
 							firstword += ' ';
 						}
-					    
+
 						if (!same_elements)
 							last_enterd = letter_entered;
 						else
@@ -637,18 +650,19 @@ void stamina()
 			else
 			{
 				int a;
-				std::cout << GeneralSymbols << " " << AmountSymbols << "\n";
 				if (AmountSymbols != 0)
 					a = (int)GeneralSymbols * 100 / AmountSymbols;
 				else
 					a = 0;
-				std::cout << a << std::endl;
 				a = a - a / 100;
 				std::string s5 = std::to_string(a);
 				mistakestxt.setString("Mistakes: " + s5 + "%");
 
 				//file
-				FileWork(words_score);
+				int record_int = FileWork(words_score);
+				std::string record_str = std::to_string(record_int);
+				recordtxt.setString("Your record: \n\t\t\t   " + record_str);
+
 				//third result window
 				window.draw(sprite);
 				window.draw(result);
@@ -667,7 +681,12 @@ void stamina()
 }
 
 int main()
-{	
+{
+	setlocale(LC_ALL, "rus");
+
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
 	stamina();
 	return 0;
 }
