@@ -957,6 +957,8 @@ int main()
 			std::cout << "The file is empty :D" << std::endl;
 			registrated = registration(fin);
 		}
+		else
+			registrated = true;
 	}
 	fin.close();
 
