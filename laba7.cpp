@@ -914,21 +914,18 @@ int stamina()
 				window.draw(next_s);
 				window.draw(rectanglehelp);
 				window.draw(help);
-
-				return words_score;
 			}
 			window.display();
-			if (timing < 0)
-				Sleep(1000);
 		}
 		choosenreal = choosen;
 	}
+	return words_score;
 }
 
 void racing(int res)
 {
 	system("cls");
-	std::cout << "LOL " << res << std::endl;
+	std::cout << "res: " << res << std::endl;
 }
 
 int main()
