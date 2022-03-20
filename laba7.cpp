@@ -238,7 +238,8 @@ bool registration(std::fstream& fin)
 				{
 					GetDataToFile(username, password);
 					Sleep(500);
-					return true;
+					registrated = true;
+					return registrated;
 				}
 			}
 			else
