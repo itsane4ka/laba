@@ -1,3 +1,7 @@
+#define WINVER 0x0501
+#define _WIN32_WINNT 0x0501
+#define _WIN32_WINDOWS 0x0501
+#define _WIN32_IE 0x0600
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <SFML/Graphics.hpp>
@@ -8,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <fstream>
@@ -110,7 +115,224 @@ int FileWork(int words_score)
 	}
 }
 
-void stamina()
+void GetDataToFile(std::string username, std::string password)
+{
+
+}
+
+bool registration(std::fstream& fin)
+{
+	bool registrated = false;
+
+	RenderWindow windowreg(VideoMode(700, 200), "IT-stamina");
+
+	// figures angles sharpness 
+	ContextSettings settings;
+	settings.antialiasingLevel = 10;
+
+	// top text output (about IT-stamina project)
+	Font font;
+	if (!font.loadFromFile("edf7f-eirik-raude.ttf"))
+		exit(0);
+
+	Texture back;
+	back.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\registration.png");
+
+	Sprite background_s;
+	background_s.setTexture(back);
+	
+	// username and password fields
+	RectangleShape rectangle1(Vector2f(176.f, 30.f));
+	rectangle1.move(242, 86);
+	rectangle1.setFillColor(Color(175, 180, 240));
+
+	RectangleShape rectangle2(Vector2f(176.f, 30.f));
+	rectangle2.move(242, 148);
+	rectangle2.setFillColor(Color(175, 180, 240));
+
+	RectangleShape rectangle0(Vector2f(150.f, 33.f));
+	rectangle0.move(260, 15);
+	rectangle0.setFillColor(Color(175, 180, 240));
+
+	// vertex line coursor (behind the cycle)
+	Vertex line_without_thickness1[] =
+	{
+		Vertex(Vector2f(247.f, 91.f)),
+		Vertex(Vector2f(247.f, 111.f))
+	};
+	line_without_thickness1->color = Color::White;
+
+	Vertex line_without_thickness2[] =
+	{
+		Vertex(Vector2f(247.f, 152.f)),
+		Vertex(Vector2f(247.f, 173.f))
+	};
+	line_without_thickness2->color = Color::White;
+
+	// timing
+	long long timing = 0;
+	auto begin_timing = std::chrono::steady_clock::now();
+	bool get_username = 0, get_password = 0;
+	std::string username, password, trash, letter_entered, last_entered;
+	int counter1 = 0, counter2 = 0;
+	bool first_username_letter = false;
+	bool first_password_letter = false;
+	bool delete_once = true;
+
+	// username text
+	Text username_text;
+	username_text.setFont(font);
+	username_text.setString(username);
+	username_text.setCharacterSize(20);
+	username_text.setFillColor(Color::White);
+	username_text.move(245, 86);
+
+	// password text
+	Text password_text;
+	password_text.setFont(font);
+	password_text.setString(username);
+	password_text.setCharacterSize(20);
+	password_text.setFillColor(Color::White);
+	password_text.move(245, 150);
+
+	while (windowreg.isOpen())
+	{
+		Event event;
+		while (windowreg.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+			{
+				registrated = false;
+				return registrated;
+			}
+
+			if (event.type == Event::Resized)
+			{
+				std::cout << "trying to resize window" << std::endl;
+				windowreg.setSize(Vector2u(700, 200));
+			}
+		}
+		windowreg.clear(Color::White);
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (rectangle1.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+			{
+				std:: cout << "got username" << std::endl;
+				get_username = true;
+				get_password = false;
+				Sleep(500);
+			}
+			else if (rectangle2.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+			{
+				std::cout << "got password" << std::endl;
+				get_password = true;
+				get_username = false;
+				Sleep(500);
+			}
+			else if (rectangle0.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+			{
+				if (username.size() > 4 && password.size() > 4)
+				{
+					GetDataToFile(username, password);
+					Sleep(500);
+					return true;
+				}
+			}
+			else
+			{
+				get_password = false;
+				get_username = false;
+			}
+		}
+
+		// entering the username
+		if (get_username)
+		{
+			if (event.type == Event::TextEntered)
+			{
+				if (event.text.unicode < 128 && event.text.unicode > 48)
+				{
+					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+					letter_entered = static_cast<char>(event.text.unicode);
+					if (username.size() > 9)
+						std::cout << "MISTAKE" << std::endl;
+					else
+					{
+						if (letter_entered != last_entered)
+						{
+							counter1++;
+							username += static_cast<char>(event.text.unicode);
+							username_text.setString(username);
+						}
+					}
+					last_entered = letter_entered;
+					delete_once = true;
+				}
+				if (event.text.unicode == 8 && delete_once)
+				{
+					delete_once = false;
+					std::cout << "deleting symbol" << std::endl;
+					username.erase(username.size() - 1);
+					username_text.setString(username);
+				}
+			}
+		}
+
+		// entering the password
+		if (get_password)
+		{
+			if (event.type == Event::TextEntered)
+			{
+				if (event.text.unicode < 128 && event.text.unicode > 48)
+				{
+					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+					letter_entered = static_cast<char>(event.text.unicode);
+					if (password.size() > 9)
+						std::cout << "MISTAKE" << std::endl;
+					else
+					{
+						if (letter_entered != last_entered)
+						{
+							counter1++;
+							password += static_cast<char>(event.text.unicode);
+							password_text.setString(password);
+						}
+					}
+					last_entered = letter_entered;
+					delete_once = true;
+				}
+				if (event.text.unicode == 8 && delete_once)
+				{
+					delete_once = false;
+					std::cout << "deleting symbol" << std::endl;
+					password.erase(password.size() - 1);
+					password_text.setString(password);
+				}
+			}
+		}
+
+		// getting coursor
+		auto end_timing = std::chrono::steady_clock::now();
+		auto elapsed_ms_timing = std::chrono::duration_cast<std::chrono::milliseconds>(end_timing - begin_timing);
+		timing = (float)elapsed_ms_timing.count() / 1000;
+		std::cout << timing << std::endl;
+		if (timing == 60)
+			timing -= 59;
+
+		// drawing
+		windowreg.draw(background_s);
+		if (timing % 2 == 0 && get_username && username.size() < 1)
+			windowreg.draw(line_without_thickness1, 2, Lines);
+		if (timing % 2 == 0 && get_password && password.size() < 1)
+			windowreg.draw(line_without_thickness2, 2, Lines);
+		windowreg.draw(username_text);  
+		windowreg.draw(password_text);
+		windowreg.display();
+	}
+}
+
+int stamina()
 {
 	// obsiously, gendering the window function
 	RenderWindow window(VideoMode(700, 200), "IT-stamina");
@@ -156,6 +378,14 @@ void stamina()
 	rectanglec.setOutlineThickness(2.f);
 	rectanglec.setOutlineColor(Color::Black);
 	rectanglec.setPosition(Vector2f(80.f, 70.f));
+
+	// next button
+	Texture next;
+	next.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\next.png");
+
+	Sprite next_s;
+	next_s.setTexture(next);
+	next_s.setPosition(600, 145);
 
 	// circle c
 	CircleShape circleс(7.f);
@@ -333,7 +563,7 @@ void stamina()
 	Clock clock;
 	Clock gameTimeClock;
 	int gameTime = 0;
-	int leftTime = 60; // main start timing 
+	int leftTime = 10; // main start timing 
 	int timing = 60;
 
 	// rectangle render
@@ -387,7 +617,7 @@ void stamina()
 			// closing
 			if (event.type == Event::Closed)
 				window.close();
-
+			
 			// getting fixed size
 			if (event.type == Event::Resized)
 			{
@@ -402,7 +632,7 @@ void stamina()
 				if (rectanglehelp.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
 					rectanglehelp.setOutlineColor(Color::Red);
-					ShellExecuteW(0, 0, L"www.google.com", NULL, NULL, SW_SHOW);
+					ShellExecuteW(0, 0, L"https://itstamina.netlify.app", NULL, NULL, SW_SHOW);
 				}
 			}
 		}
@@ -663,6 +893,13 @@ void stamina()
 				std::string record_str = std::to_string(record_int);
 				recordtxt.setString("Your record: \n\t\t\t   " + record_str);
 
+				// getting
+				if (event.type == sf::Event::MouseButtonPressed)
+				{
+					if (next_s.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+						break;
+				}
+
 				//third result window
 				window.draw(sprite);
 				window.draw(result);
@@ -671,13 +908,24 @@ void stamina()
 				window.draw(mistakestxt);
 
 				// also draw help
+				window.draw(next_s);
 				window.draw(rectanglehelp);
 				window.draw(help);
+
+				return words_score;
 			}
 			window.display();
+			if (timing < 0)
+				Sleep(1000);
 		}
 		choosenreal = choosen;
 	}
+}
+
+void racing(int res)
+{
+	system("cls");
+	std::cout << "LOL " << res << std::endl;
 }
 
 int main()
@@ -687,6 +935,28 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	stamina();
+	bool registrated = false;
+
+	// checking file
+	std::fstream fin;
+	fin.open("data.txt", std::ios::in);
+	long file_size;
+	fin.seekg(0, std::ios::end);
+	file_size = fin.tellg();
+	if (file_size == 0)
+	{
+		std::cout << "The file is empty :D" << std::endl;
+		registrated = registration(fin);
+	} 
+	fin.close();
+
+	if (registrated)
+	{
+		// getting to main file
+		int res = stamina();
+		racing(res);
+	}
+
+	system("Pause");
 	return 0;
 }
