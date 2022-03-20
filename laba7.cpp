@@ -115,9 +115,11 @@ int FileWork(int words_score)
 	}
 }
 
-void GetDataToFile(std::string username, std::string)
+void GetDataToFile(std::string username, std::string password)
 {
-
+	std::ofstream fout("data.txt");
+	fout << username << "\n" << password;
+	fout.close();
 }
 
 bool registration(std::fstream& fin)
