@@ -115,7 +115,7 @@ int FileWork(int words_score)
 	}
 }
 
-void GetDataToFile(std::string username, std::string password)
+void GetDataToFile(std::string username, std::string)
 {
 
 }
@@ -940,14 +940,22 @@ int main()
 	// checking file
 	std::fstream fin;
 	fin.open("data.txt", std::ios::in);
-	long file_size;
-	fin.seekg(0, std::ios::end);
-	file_size = fin.tellg();
-	if (file_size == 0)
+	if (!fin.is_open())
 	{
-		std::cout << "The file is empty :D" << std::endl;
+		std::cout << "Can't open the file :D" << std::endl;
 		registrated = registration(fin);
-	} 
+	}
+	else
+	{
+		long file_size;
+		fin.seekg(0, std::ios::end);
+		file_size = fin.tellg();
+		if (file_size == 0)
+		{
+			std::cout << "The file is empty :D" << std::endl;
+			registrated = registration(fin);
+		}
+	}
 	fin.close();
 
 	if (registrated)
