@@ -1,3 +1,14 @@
+//  IT-stamina  //
+
+/*  project created by Oleksandr Kats, Kapelushniy Boggan
+	programming languages supported: c++, python, JS, HTML 5.0
+	creation started 08.03.2022
+	creation stoppped 22.03.2022
+
+	Make some fun!
+*/
+
+
 #define WINVER 0x0501
 #define _WIN32_WINNT 0x0501
 #define _WIN32_WINDOWS 0x0501
@@ -13,7 +24,6 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include <cmath>
 #include <cstdio>
 #include <fstream>
 #include <chrono>
@@ -89,7 +99,7 @@ int FileWork(int words_score)
 
 	if (!fin.is_open())
 	{
-		std::cout << "Файл не может быть открыт!\n";
+		std::cout << "Can not open the file!\n";
 		return 0;
 	}
 	else
@@ -175,11 +185,10 @@ bool registration(std::fstream& fin)
 	long long timing = 0;
 	auto begin_timing = std::chrono::steady_clock::now();
 	bool get_username = 0, get_password = 0;
-	std::string username, password, trash, letter_entered, last_entered;
+	std::string username, password, trash, letter_entered;
 	int counter1 = 0, counter2 = 0;
 	bool first_username_letter = false;
 	bool first_password_letter = false;
-	bool delete_once = true;
 
 	// username text
 	Text username_text;
@@ -213,104 +222,98 @@ bool registration(std::fstream& fin)
 				std::cout << "trying to resize window" << std::endl;
 				windowreg.setSize(Vector2u(700, 200));
 			}
-		}
-		windowreg.clear(Color::White);
 
-		if (event.type == sf::Event::MouseButtonPressed)
-		{
-			if (rectangle1.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+			// entering the username
+			if (get_username)
 			{
-				std:: cout << "got username" << std::endl;
-				get_username = true;
-				get_password = false;
-				Sleep(500);
-			}
-			else if (rectangle2.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
-			{
-				std::cout << "got password" << std::endl;
-				get_password = true;
-				get_username = false;
-				Sleep(500);
-			}
-			else if (rectangle0.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
-			{
-				if (username.size() > 4 && password.size() > 4)
+				if (event.type == Event::TextEntered)
 				{
-					GetDataToFile(username, password);
-					Sleep(500);
-					registrated = true;
-					return registrated;
-				}
-			}
-			else
-			{
-				get_password = false;
-				get_username = false;
-			}
-		}
-
-		// entering the username
-		if (get_username)
-		{
-			if (event.type == Event::TextEntered)
-			{
-				if (event.text.unicode < 128 && event.text.unicode > 48)
-				{
-					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
-					letter_entered = static_cast<char>(event.text.unicode);
-					if (username.size() > 9)
-						std::cout << "MISTAKE" << std::endl;
-					else
+					if (event.text.unicode < 128 && event.text.unicode >= 48)
 					{
-						if (letter_entered != last_entered)
+						std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+						letter_entered = static_cast<char>(event.text.unicode);
+						if (username.size() > 9)
+							std::cout << "MISTAKE" << std::endl;
+						else
 						{
 							counter1++;
 							username += static_cast<char>(event.text.unicode);
 							username_text.setString(username);
 						}
 					}
-					last_entered = letter_entered;
-					delete_once = true;
-				}
-				if (event.text.unicode == 8 && delete_once)
-				{
-					delete_once = false;
-					std::cout << "deleting symbol" << std::endl;
-					username.erase(username.size() - 1);
-					username_text.setString(username);
+					if (event.text.unicode == 8)
+					{
+						if (username.size() > 0)
+						{
+							std::cout << "deleting symbol" << std::endl;
+							username.erase(username.size() - 1);
+							username_text.setString(username);
+						}
+					}
 				}
 			}
-		}
 
-		// entering the password
-		if (get_password)
-		{
-			if (event.type == Event::TextEntered)
+			// entering the password
+			if (get_password)
 			{
-				if (event.text.unicode < 128 && event.text.unicode > 48)
+				if (event.type == Event::TextEntered)
 				{
-					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
-					letter_entered = static_cast<char>(event.text.unicode);
-					if (password.size() > 9)
-						std::cout << "MISTAKE" << std::endl;
-					else
+					if (event.text.unicode < 128 && event.text.unicode >= 48)
 					{
-						if (letter_entered != last_entered)
+						std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+						letter_entered = static_cast<char>(event.text.unicode);
+						if (password.size() > 9)
+							std::cout << "MISTAKE" << std::endl;
+						else
 						{
 							counter1++;
 							password += static_cast<char>(event.text.unicode);
 							password_text.setString(password);
 						}
 					}
-					last_entered = letter_entered;
-					delete_once = true;
+					if (event.text.unicode == 8)
+					{
+						if (password.size() > 0)
+						{
+							std::cout << "deleting symbol" << std::endl;
+							password.erase(password.size() - 1);
+							password_text.setString(password);
+						}
+					}
 				}
-				if (event.text.unicode == 8 && delete_once)
+			}
+
+			// clicking coursor
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (rectangle1.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					delete_once = false;
-					std::cout << "deleting symbol" << std::endl;
-					password.erase(password.size() - 1);
-					password_text.setString(password);
+					std::cout << "got username" << std::endl;
+					get_username = true;
+					get_password = false;
+					Sleep(500);
+				}
+				else if (rectangle2.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					std::cout << "got password" << std::endl;
+					get_password = true;
+					get_username = false;
+					Sleep(500);
+				}
+				else if (rectangle0.getGlobalBounds().contains(windowreg.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (username.size() > 4 && password.size() > 4)
+					{
+						GetDataToFile(username, password);
+						Sleep(500);
+						registrated = true;
+						return registrated;
+					}
+				}
+				else
+				{
+					get_password = false;
+					get_username = false;
 				}
 			}
 		}
@@ -566,7 +569,7 @@ int stamina()
 	Clock clock;
 	Clock gameTimeClock;
 	int gameTime = 0;
-	int leftTime = 10; // main start timing 
+	int leftTime = 60; // main start timing 
 	int timing = 60;
 
 	// rectangle render
@@ -580,7 +583,6 @@ int stamina()
 
 	// getting text from the app INPUT
 	std::string letter_entered;
-	std::string last_enterd = "stop";
 
 	// creating texture
 	Texture mainpic;
@@ -620,7 +622,7 @@ int stamina()
 			// closing
 			if (event.type == Event::Closed)
 				window.close();
-			
+
 			// getting fixed size
 			if (event.type == Event::Resized)
 			{
@@ -638,175 +640,149 @@ int stamina()
 					ShellExecuteW(0, 0, L"https://itstamina.netlify.app", NULL, NULL, SW_SHOW);
 				}
 			}
-		}
 
-		if (!choosen)
-		{
-			// c++
-			if (event.type == sf::Event::MouseButtonPressed)
+			if (!choosen)
 			{
-				if (rectanglec.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				// c++
+				if (event.type == sf::Event::MouseButtonPressed)
 				{
-					// rectanglec.setOutlineColor(Color::Red);
-					c.setFillColor(Color(201, 201, 201));
-					c.setStyle(Text::Underlined);
-					language = c_lang;
-					choosen = true;
-					Sleep(500);
-				}
-				if (rectanglepy.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
-				{
-					// rectanglepy.setOutlineColor(Color::Red);
-					py.setFillColor(Color(211, 211, 211));
-					py.setStyle(Text::Underlined);
-					language = py_lang;
-					choosen = true;
-					Sleep(500);
-				}
-				if (rectanglejs.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
-				{
-					// rectanglejs.setOutlineColor(Color::Red);
-					js.setFillColor(Color(201, 201, 201));
-					js.setStyle(Text::Underlined);
-					language = js_lang;
-					choosen = true;
-					Sleep(500);
-				}
-				if (rectanglehtml.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
-				{
-					// rectanglehtml.setOutlineColor(Color::Red);
-					html.setFillColor(Color(201, 201, 201));
-					html.setStyle(Text::Underlined);
-					language = html_lang;
-					choosen = true;
-					Sleep(500);
-				}
-			}
-		}
-		else if (choosen)
-		{
-			// getting time before beginnig
-			if (first_time)
-				startTime = gameTimeClock.getElapsedTime().asSeconds();
-			if (first_time)
-			{
-				for (size_t i = 0; i < 4; i++)
-				{
-					flag = getRandomOperator(language);
-					std::cout << operators[flag] << " " << flag << std::endl;
-					strwords = strwords + operators[flag] + ' ';
-					if (i == 0)
-						firstword = operators[flag] + ' ';
-				}
-				operatorstxt.setString(strwords);
-				operatorstxt.setCharacterSize(30);
-				operatorstxt.setFillColor(Color(70, 70, 70));
-				operatorstxt.move(40, 104);
-				first_time = false;
-
-				firstwordtxt.setString(firstword);
-				firstwordtxt.setCharacterSize(30);
-				firstwordtxt.setFillColor(Color(0, 0, 0));
-				firstwordtxt.move(40, 104);
-			}
-
-			// getting text + check if it is a letter/number + main func
-			window.setKeyRepeatEnabled(false);
-			if (event.type == Event::TextEntered)
-			{
-				if (event.text.unicode < 128)
-				{
-					std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << " !! " << last_enterd << std::endl;
-					letter_entered = static_cast<char>(event.text.unicode);
-
-					// back gray text
-					if (letter_entered != last_enterd && strwords[0] == letter_entered)
+					if (rectanglec.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 					{
-						if (same_elements)
-						{
-							strwords.insert(strwords.begin() + 1, strwords[0]);
-							firstword.insert(firstword.begin() + 1, firstword[0]);
-						}
-						same_elements = false;
-
-						if (strwords[0] == strwords[1])
-							same_elements = true;
-
-						// deleting the entered symbol
-						strwords.erase(strwords.begin());
-						operatorstxt.setString(strwords);
-
-						// deleting the first word 
-						firstword.erase(firstword.begin());
-						firstwordtxt.setString(firstword);
-
-						std::cout << ".................." << std::endl;
-						std::cout << "letter_entered " << letter_entered << std::endl;
-						std::cout << "last_enterd " << last_enterd << std::endl;
-						std::cout << "string " << strwords << std::endl;
-						std::cout << ".................." << std::endl;
-
-						// increasing the amount of symbols
-						if (timing > 0)
-						{
-							AmountSymbols++;
-							std::cout << "Amount symbols:  " << AmountSymbols << std::endl;
-						}
-
-						if (strwords[1] == ' ')
-						{
-							// adding new word if the last is done
-							strwords = strwords + operators[getRandomOperator(language)] + ' ';
-							operatorstxt.setString(strwords);
-							words_score++;
-
-							// making new word black
-							for (int i = 2; i < strwords.size(); i++)
-							{
-								if (strwords[i] == ' ')
-									break;
-								else
-									firstword = firstword + strwords[i];
-							}
-							firstword += ' ';
-						}
-
-						if (!same_elements)
-							last_enterd = letter_entered;
-						else
-						{
-							last_enterd = "trash";
-							//strwords.insert(strwords.begin()+1, strwords[0]);
-							same_elements = false;
-						}
-						once_read = true;
+						// rectanglec.setOutlineColor(Color::Red);
+						c.setFillColor(Color(201, 201, 201));
+						c.setStyle(Text::Underlined);
+						language = c_lang;
+						choosen = true;
+						Sleep(500);
 					}
-					else if (letter_entered != last_enterd && strwords[0] != letter_entered && once_read)
+					if (rectanglepy.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 					{
+						// rectanglepy.setOutlineColor(Color::Red);
+						py.setFillColor(Color(211, 211, 211));
+						py.setStyle(Text::Underlined);
+						language = py_lang;
+						choosen = true;
+						Sleep(500);
+					}
+					if (rectanglejs.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+					{
+						// rectanglejs.setOutlineColor(Color::Red);
+						js.setFillColor(Color(201, 201, 201));
+						js.setStyle(Text::Underlined);
+						language = js_lang;
+						choosen = true;
+						Sleep(500);
+					}
+					if (rectanglehtml.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+					{
+						// rectanglehtml.setOutlineColor(Color::Red);
+						html.setFillColor(Color(201, 201, 201));
+						html.setStyle(Text::Underlined);
+						language = html_lang;
+						choosen = true;
+						Sleep(500);
+					}
+				}
+			}
+			else if (choosen)
+			{
+				// getting time before beginnig
+				if (first_time)
+					startTime = gameTimeClock.getElapsedTime().asSeconds();
+				if (first_time)
+				{
+					for (size_t i = 0; i < 4; i++)
+					{
+						flag = getRandomOperator(language);
+						std::cout << operators[flag] << " " << flag << std::endl;
+						strwords = strwords + operators[flag] + ' ';
+						if (i == 0)
+							firstword = operators[flag] + ' ';
+					}
+					operatorstxt.setString(strwords);
+					operatorstxt.setCharacterSize(30);
+					operatorstxt.setFillColor(Color(70, 70, 70));
+					operatorstxt.move(40, 104);
+					first_time = false;
+
+					firstwordtxt.setString(firstword);
+					firstwordtxt.setCharacterSize(30);
+					firstwordtxt.setFillColor(Color(0, 0, 0));
+					firstwordtxt.move(40, 104);
+				}
+
+				// getting text + check if it is a letter/number + main func
+				window.setKeyRepeatEnabled(false);
+				if (event.type == Event::TextEntered)
+				{
+					if (timing > 0)
 						GeneralSymbols++;
-						once_read = false;
+					if (event.text.unicode < 128)
+					{
+						std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+						letter_entered = static_cast<char>(event.text.unicode);
+						std::cout << letter_entered << "\t" << strwords[0] << std::endl;
+
+						// back and gray text
+						if (strwords[0] == letter_entered)
+						{
+							// deleting the entered symbol
+							std::cout << strwords << " 1" << std::endl;
+							strwords.erase(strwords.begin());
+							std::cout << strwords << " 2" << std::endl;
+							operatorstxt.setString(strwords);
+
+							// deleting the first word 
+							firstword.erase(firstword.begin());
+							firstwordtxt.setString(firstword);
+
+							// increasing the amount of symbols
+							if (timing > 0)
+							{
+								AmountSymbols++;
+								std::cout << "Amount symbols:  " << AmountSymbols << std::endl;
+							}
+
+							if (strwords[1] == ' ')
+							{
+								// adding new word if the last is done
+								strwords = strwords + operators[getRandomOperator(language)] + ' ';
+								operatorstxt.setString(strwords);
+								words_score++;
+
+								// making new word black
+								for (int i = 2; i < strwords.size(); i++)
+								{
+									if (strwords[i] == ' ')
+										break;
+									else
+										firstword = firstword + strwords[i];
+								}
+								firstword += ' ';
+							}
+						}
 					}
 				}
 			}
-
-			// getting correct time
-			gameTime = gameTimeClock.getElapsedTime().asSeconds();
-			timing = leftTime - gameTime + startTime;
-
-			//convetring int to string and adding real timing
-			std::string s1 = std::to_string(timing);
-			maintime.setString("Timing: " + s1);
-
-			//convetring int to string and adding real score / speed / mistakes
-			std::string s2 = std::to_string(words_score);
-			std::string s3 = std::to_string(AmountSymbols);
-			score.setString("Score: " + s2);
-			result.setString("Score: " + s2 + " op-s");
-			speed.setString("Speed: " + s3 + " s/min");
-
-			// view all text + pic output
-			window.clear(Color(222, 202, 245, 0));
 		}
+
+		// getting correct time
+		gameTime = gameTimeClock.getElapsedTime().asSeconds();
+		timing = leftTime - gameTime + startTime;
+		
+		//convetring int to string and adding real timing
+		std::string s1 = std::to_string(timing);
+		maintime.setString("Timing: " + s1);
+
+		//convetring int to string and adding real score / speed / mistakes
+		std::string s2 = std::to_string(words_score);
+		std::string s3 = std::to_string(AmountSymbols);
+		score.setString("Score: " + s2);
+		result.setString("Score: " + s2 + " op-s");
+		speed.setString("Speed: " + s3 + " s/min");
+
+		// view all text + pic output
+		window.clear(Color(222, 202, 245, 0));
 
 		// vertex line coursor (behind the cycle)
 		Vertex line_without_thickness[] =
@@ -839,12 +815,11 @@ int stamina()
 
 			if (choosen)
 			{
-				std::cout << "CHOICE MADE" << std::endl;
+				std::cout << "CHOICE MADE" << std::endl << std::endl;
 				std::cout << language << std::endl;
 				switch (language)
 				{
 				case 0:
-					std::cout << "looser" << std::endl;
 					window.draw(circleс_choosed);
 					break;
 				case 1:
@@ -884,10 +859,10 @@ int stamina()
 			{
 				int a;
 				if (AmountSymbols != 0)
-					a = (int)GeneralSymbols * 100 / AmountSymbols;
+					a = (int)AmountSymbols * 100 / GeneralSymbols;
 				else
 					a = 0;
-				a = a - a / 100;
+				a = 100 - a;
 				std::string s5 = std::to_string(a);
 				mistakestxt.setString("Mistakes: " + s5 + "%");
 
@@ -924,8 +899,11 @@ int stamina()
 
 void racing(int res)
 {
-	system("cls");
-	std::cout << "res: " << res << std::endl;
+	system("cls"); 
+	std::cout << "\t\tIT-stamina" << std::endl << std::endl;
+	std::cout << "\t\tYout res: " << res << std::endl;
+	std::cout << "\t\tSure you can make more!" << res << std::endl;
+	std::cout << "\t\tLets try once again!" << res << std::endl << std::endl << std::endl << std::endl;
 }
 
 int main()
