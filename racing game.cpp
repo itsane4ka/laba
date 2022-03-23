@@ -20,19 +20,19 @@ const unsigned int DIM1 = 10;
 const unsigned int DIM2 = 2;
 
 int arr[DIM1][DIM2] = {
-	{ 82, 617 },
-	{ 495, 628 },
-	{ 990, 640 },
-	{ 1450, 630 },
-	{ 1170, 260 },
-	{ 1570, 530 },
-	{ 97, 82 },
-	{ 347, 143 },
-	{ 771, 67 },
-	{ 1390, 110 },
+	{ 70, 617 },
+	{ 445, 590 },
+	{ 970, 587 },
+	{ 1410, 582 },
+	{ 1150, 587 },
+	{ 1520, 530 },
+	{ 74, 82 },
+	{ 267, 143 },
+	{ 751, 18 },
+	{ 1270, 110 },
 };
 
-int FileWork(int words_score)
+int FileWork(int score)
 {
 	// trying to get something from the file
 	std::string buff;
@@ -47,18 +47,24 @@ int FileWork(int words_score)
 	{
 		fin >> buff;
 		if (buff == "")
-			return words_score;
+		{
+			std::string str_record = std::to_string(score);
+			std::ofstream fout("record.txt");
+			fout << score;
+			fout.close();
+			return score;
+		}
 		else
 		{
 			int n = atoi(buff.c_str());
-			if (words_score > n)
+			if (score > n)
 			{
 				// getting new rec to the file
-				std::string str_record = std::to_string(words_score);
+				std::string str_record = std::to_string(score);
 				std::ofstream fout("record.txt");
-				fout << words_score;
+				fout << score;
 				fout.close();
-				return words_score;
+				return score;
 			}
 			else
 				return n;
@@ -112,7 +118,7 @@ void racing()
 	speed_cars[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
 	speed_cars[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-speed.png");
 	speed_cars[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-speed.png");
-	speed_cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-speed-speed.png");
+	speed_cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-speed.png");
 
 	Texture cars_broken[5];
 	cars_broken[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken.png");
@@ -226,6 +232,15 @@ void racing()
 	gameover.setOutlineThickness(1.f);
 	gameover.move(600, 270);
 
+	Text recordtxt;
+	recordtxt.setFont(font);
+	recordtxt.setString("Your record: \n");
+	recordtxt.setCharacterSize(85);
+	recordtxt.setFillColor(Color(247, 168, 24));
+	recordtxt.setOutlineColor(Color::Black);
+	recordtxt.setOutlineThickness(1.f);
+	recordtxt.move(600, 470);
+
 	// important variables
 	int timing = 0;
 	float x = 100;
@@ -242,8 +257,6 @@ void racing()
 	double x12 = 724, y12 = 472, x22 = 788, y22 = 518, x32 = 900, y32 = 460;
 	double x13 = 900, y13 = 460, x23 = 972, y23 = 488, x33 = 1025, y33 = 450;
 	int x_money = 0, y_money = 0;
-
-	auto begin_timing = std::chrono::steady_clock::now();
 
 	RectangleShape rectangle1(Vector2f(52.f, 38.f));
 	rectangle1.move(44, 287);
@@ -281,6 +294,8 @@ void racing()
 	convex3.setPoint(1, Vector2f(970.f, 487.f));
 	convex3.setPoint(2, Vector2f(1030.f, 453.f));
 	convex3.setFillColor(Color::White);
+
+	auto begin_timing = std::chrono::steady_clock::now();
 
 	while (window.isOpen())
 	{
@@ -499,13 +514,14 @@ void racing()
 				fg = dist(gen);
 				x_money = arr[fg][0];
 				y_money = arr[fg][1];
+				std::cout << "IMPORTANT :::: " << x_money << " " << y_money << std::endl;
 				money_s.setPosition(x_money, y_money);
 				eaten = false;
 				std::cout << x_money << "\t" << y_money << std::endl;
 				result_money++;
 			}
 
-			if ((x_money - x) * (x_money - x) + (y_money - y) * (y_money - y) < 26 * 26)
+			if ((x_money + 46 - x) * (x_money + 46 - x) + (y_money + 46 - y) * (y_money + 46 - y) < 33*33)
 			{
 				eaten = true;
 			}
@@ -602,9 +618,13 @@ void racing()
 
 		if (timing > 60 || AmountCollision > 20)
 		{
-			FileWork(result_money);
+			system("cls");
+			int rec = FileWork(result_money);
+			recordtxt.setString("Your record: " + std::to_string(rec));
 			gameover.setString("G A M E O V E R\n R E S U L T: " + std::to_string(result_money));
+
 			window.draw(gameover);
+			window.draw(recordtxt);
 		}
 
 		/*
@@ -625,6 +645,7 @@ void racing()
 			window.draw(rectangle4);
 		}
 		*/
+
 		window.display();
 	}
 }
@@ -632,7 +653,6 @@ void racing()
 int main()
 {
 	racing();
-	system("cls");
 	std::cout << "endline" << std::endl;
 
 	return 0;
