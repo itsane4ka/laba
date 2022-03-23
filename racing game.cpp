@@ -24,7 +24,7 @@ int getRandomCar()
 	return flag;
 }
 
-bool triangle_check(float &speed, double x11, double y11, double x21, double y21, double x31, double y31, double x, double y)
+bool triangle_check_fuck(double x11, double y11, double x21, double y21, double x31, double y31, double x, double y)
 {
 	int a = (x11 - x) * (y21 - y11) - (x21 - x11) * (y11 - y);
 	int b = (x21 - x) * (y31 - y21) - (x31 - x21) * (y21 - y);
@@ -38,7 +38,7 @@ bool triangle_check(float &speed, double x11, double y11, double x21, double y21
 int main()
 {
 	// window render
-	RenderWindow window(VideoMode(1651, 715), "racing!");
+	RenderWindow window(VideoMode(1650, 715), "racing!");
 	window.setFramerateLimit(60);
 	
 	// figures angles sharpness 
@@ -62,6 +62,20 @@ int main()
 	speed_cars[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-speed.png");
 	speed_cars[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-speed.png");
 	speed_cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-speed-speed.png");
+
+	Texture cars_broken[5];
+	cars_broken[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken.png");
+	cars_broken[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance-broken.png");
+	cars_broken[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-broken.png");
+	cars_broken[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-broken.png");
+	cars_broken[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken.png");
+
+	Texture cars_broken_hard[5];
+	cars_broken_hard[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken-hard.png");
+	cars_broken_hard[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance-broken-hard.png");
+	cars_broken_hard[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-broken-hard.png");
+	cars_broken_hard[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-broken-hard.png");
+	cars_broken_hard[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken-hard.png");
 
 	Texture speed_ambulance[3];
 	speed_ambulance[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\ambulance_animation\\1.png");
@@ -117,7 +131,7 @@ int main()
 	plane_s.setPosition(x_plane, y_plane);
 
 	// important variables
-	long long timing = 0;
+	int timing = 0;
 	float x = 100;
 	float y = 170;
 	float speed = 0;
@@ -125,10 +139,10 @@ int main()
 	float maxSpeed = 12.0;
 	float acc = 0.2, dec = 0.3;
 	float turnSpeed = 0.08;
+	int AmountCollision = 0;
 	double x11 = 726, y11 = 467, x21 = 1018, y21 = 446, x31 = 856, y31 = 360;
-	double x12 = 726, y12 = 467, x22 = 1018, y22 = 446, x32 = 856, y32 = 360;
-	double x13 = 726, y13 = 467, x23 = 1018, y23 = 446, x33 = 856, y33 = 360;
-	
+	double x12 = 724, y12 = 472, x22 = 788, y22 = 518, x32 = 900, y32 = 460;
+	double x13 = 900, y13 = 460, x23 = 972, y23 = 488, x33 = 1025, y33 = 450;
 
 	auto begin_timing = std::chrono::steady_clock::now();
 
@@ -219,26 +233,57 @@ int main()
 		x += sin(angle) * speed;
 		y -= cos(angle) * speed;
 
-
 		// checking the end of the map
 		if (x < 0 || y < 0 || x > 1650 || y > 710)
 		{
 			speed = 0 - speed * 0.75;
-			if (x < -20 || y < -20 || x > 1670 || y > 735)
+			if (abs(speed) < 0.4)
 			{
-				window.close();
-				system("cls");
-				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(hConsole, 4);
-				std::cout << "you okay? wtf you trying to do bro?" << std::endl;
-				std::cout << "i don't like it.\n\n" << std::endl;
-				std::cout << "THERE IS NO WAY THERE." << std::endl;
-				Sleep(6000);
-				SetConsoleTextAttribute(hConsole, 7);
-				break;
+				if (x < -5 || y < -5 || x > 1656 || y > 715)
+				{
+					if (x < -20 || y < -20 || x > 1670 || y > 730)
+					{
+						window.close();
+						system("cls");
+						HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+						SetConsoleTextAttribute(hConsole, 4);
+						std::cout << "you okay? wtf you trying to do bro?" << std::endl;
+						std::cout << "i don't like it.\n\n" << std::endl;
+						std::cout << "THERE IS NO WAY THERE." << std::endl;
+						Sleep(6000);
+						SetConsoleTextAttribute(hConsole, 7);
+						break;
+					}
+					else
+					{
+						if (x < -5)
+						{
+							x += 105;
+							speed = -5;
+						}
+						if (y < -5)
+						{
+							y += 105;
+							speed = -5;
+						}
+						if (x > 1656)
+						{
+							x -= 105;
+							speed = -5;
+						}
+						if (y > 730)
+						{
+							y -= 105;
+							speed = -5;
+						}
+					}
+				}
 			}
+			else if (abs(speed) > 5)
+				AmountCollision++;
 		}
 		
+		// cheching the circles of bushes and swamp
 		if (x > 44 && x < 96 && y > 287 && y < 325)
 		{
 			if (abs(speed) < 1)
@@ -267,14 +312,60 @@ int main()
 			else
 				speed = 0 - speed * 0.75;
 		}
-		if (triangle_check(speed, x11, y11, x21, y21, x31, y31, x, y))
+
+		// cheching the house triangles
+
+		/*
+		bool abobus1 = triangle_check_fuck(x11, y11, x21, y21, x31, y31, x, y);
+		std::cout << abobus << std::endl;
+		*/
+
+		int a1 = (x11 - x) * (y21 - y11) - (x21 - x11) * (y11 - y);
+		int b1 = (x21 - x) * (y31 - y21) - (x31 - x21) * (y21 - y);
+		int c1 = (x31 - x) * (y11 - y31) - (x11 - x31) * (y31 - y);
+		if ((a1 > 0 && b1 > 0 && c1 > 0) || (a1 < 0 && b1 < 0 && c1 < 0) || (a1 == 0 || b1 == 0 || c1 == 0))
 		{
 			if (abs(speed) > 1)
+			{
 				speed = 0 - speed * 0.75;
+				if (abs(speed) > 5)
+					AmountCollision++;
+			}
 			else
 				speed = 0 - speed * 1.5;
 		}
+		int a2 = (x12 - x) * (y22 - y12) - (x22 - x12) * (y12 - y);
+		int b2 = (x22 - x) * (y32 - y22) - (x32 - x22) * (y22 - y);
+		int c2 = (x32 - x) * (y12 - y32) - (x12 - x32) * (y32 - y);
+		if ((a2 > 0 && b2 > 0 && c2 > 0) || (a2 < 0 && b2 < 0 && c2 < 0) || (a2 == 0 || b2 == 0 || c2 == 0))
+		{
+			if (abs(speed) > 1)
+			{
+				speed = 0 - speed * 0.75;
+				if (abs(speed) > 5)
+					AmountCollision++;
+			}
+			else
+				speed = 0 - speed * 1.5;
+		}
+		int a3 = (x13 - x) * (y23 - y13) - (x23 - x13) * (y13 - y);
+		int b3 = (x23 - x) * (y33 - y23) - (x33 - x23) * (y23 - y);
+		int c3 = (x33 - x) * (y13 - y33) - (x13 - x33) * (y33 - y);
+		if ((a3 > 0 && b3 > 0 && c3 > 0) || (a3 < 0 && b3 < 0 && c3 < 0) || (a3 == 0 || b3 == 0 || c3 == 0))
+		{
+			if (abs(speed) > 1)
+			{
+				speed = 0 - speed * 0.75;
+				if (abs(speed) > 5)
+					AmountCollision++;
+			}
+			else
+				speed = 0 - speed * 1.5;
+			
+		}
 
+
+		// cheching the circles of bushes and swamp
 		if (abs(speed) > 1.0)
 		{
 			if ((x - 510) * (x - 510) + (y - 235) * (y - 235) <= pow(87.5, 2))
@@ -284,6 +375,7 @@ int main()
 			if ((x - 1267) * (x - 1267) + (y - 430) * (y - 430) <= pow(97.5, 2))
 				speed *= 0.85;
 
+			// speed and drift effect
 			if (abs(speed) > 10.0 &&  (int)angle % 90 != 0 && !Down)
 			{
 				cars[random].setSmooth(true);
@@ -296,7 +388,22 @@ int main()
 			}
 		}  
 
-		// draw
+		// car broken
+		if (AmountCollision > 5)
+		{
+			if (AmountCollision > 10)
+			{
+				maxSpeed = 3.0;
+				car_s.setTexture(cars_broken_hard[random]);
+			}
+			else
+			{
+				maxSpeed = 8.0;
+				car_s.setTexture(cars_broken[random]);
+			}
+		}
+
+		// draw 1 MAIN
 		window.clear(Color::White);
 		window.draw(background_s);
 		window.draw(swamp_s);
@@ -313,6 +420,7 @@ int main()
 		timing = (float)elapsed_ms_timing.count() / 1000;
 		std::cout << timing << std::endl;
 
+		// ambulance animation 
 		if (random == 1 && abs(speed) > 0)
 		{
 			if (timing % 2 == 0)
@@ -322,6 +430,8 @@ int main()
 		}
 		else if (random == 1 && abs(speed) < 2)
 			car_s.setTexture(speed_ambulance[1]);
+
+		// draw 2
 		window.draw(car_s);
 		window.draw(bridge_s);
 		window.draw(bush_s);
@@ -329,13 +439,15 @@ int main()
 		if (timing % 45 < 15)
 			window.draw(plane_s);
 
+		/*
+		* convex triangls house
+		* rectangles bridge
 		if (timing % 2 == 0)
 		{
 			window.draw(convex1);
 			window.draw(convex2);
 			window.draw(convex3);
 		}
-		/*
 		if (timing % 2 == 0)
 		{
 			window.draw(rectangle1);
