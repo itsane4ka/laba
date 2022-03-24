@@ -16,6 +16,8 @@
 
 using namespace sf;
 
+static bool game_gameover = false;
+
 const unsigned int DIM1 = 10;
 const unsigned int DIM2 = 2;
 
@@ -32,7 +34,82 @@ int arr[DIM1][DIM2] = {
 	{ 1270, 110 },
 };
 
-int FileWork(int score)
+int FileWorkMoney(int score)
+{
+	// trying to get something from the file
+	std::string buff;
+	std::ifstream fin("money.txt");
+
+	if (!fin.is_open())
+	{
+		std::cout << "Can not open the file!\n";
+		return 0;
+	}
+	else
+	{
+		fin >> buff;
+		if (buff == "")
+		{
+			std::string str_record = std::to_string(score);
+			std::ofstream fout("money.txt");
+			fout << score;
+			fout.close();
+			return score;
+		}
+		else
+		{
+			int n = atoi(buff.c_str());
+			int new_sum = score + n;
+			// getting new money sum to the file
+			std::string str_record = std::to_string(new_sum);
+			std::ofstream fout("money.txt");
+			fout << str_record;
+			fout.close();
+			return new_sum;
+		}
+	}
+}
+
+void FileWorkGetMoney(int cost)
+{
+	std::string buff;
+	std::ifstream fin("money.txt");
+	fin >> buff;
+	int n = atoi(buff.c_str());
+	std::cout << n << "\t" << cost << std::endl;
+	n = n - cost;
+	std::cout << n << std::endl;
+
+	std::string str_record = std::to_string(n);
+	std::ofstream fout("money.txt");
+	fout << n;
+	fout.close();
+}
+
+int FileWorkGetMoney()
+{
+	// trying to get something from the file
+	std::string buff;
+	std::ifstream fin("money.txt");
+
+	if (!fin.is_open())
+	{
+		return 0;
+	}
+	else
+	{
+		fin >> buff;
+		if (buff == "")
+			return 0;
+		else
+		{
+			int n = atoi(buff.c_str());
+			return n;
+		}
+	}
+}
+
+int FileWorkRec(int score)
 {
 	// trying to get something from the file
 	std::string buff;
@@ -92,10 +169,188 @@ bool triangle_check_fuck(double x11, double y11, double x21, double y21, double 
 	else false;
 }
 
-void racing()
+bool CheckBought(std::string file_name)
+{
+	std::string buff;
+	std::ifstream fin(file_name);
+
+	if (!fin.is_open())
+	{
+		std::cout << "Can not open the file!\n";
+		return false;
+	}
+	else
+	{
+		fin >> buff;
+		if (buff == "")
+			return false;
+		else
+			return true;
+	}
+}
+
+int shop()
 {
 	// window render
-	RenderWindow window(VideoMode(1650, 715), "racing!");
+	RenderWindow window(VideoMode(1650, 715), "mad racing!");
+	window.setFramerateLimit(60);
+
+	// figures angles sharpness 
+	ContextSettings settings;
+	settings.antialiasingLevel = 10;
+
+	// get textures
+	Texture back;
+	back.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop final.png");
+
+	Sprite back_s;
+	back_s.setTexture(back);
+
+	RectangleShape rectangle1(Vector2f(115.f, 43.f));
+	rectangle1.move(827, 302);
+	rectangle1.setFillColor(Color::White);
+
+	RectangleShape rectangle2(Vector2f(115.f, 43.f));
+	rectangle2.move(827, 368);
+	rectangle2.setFillColor(Color::White);
+
+	RectangleShape rectangle3(Vector2f(115.f, 43.f));
+	rectangle3.move(827, 440);
+	rectangle3.setFillColor(Color::White);
+
+	RectangleShape rectangle4(Vector2f(134.f, 43.f));
+	rectangle4.move(813, 511);
+	rectangle4.setFillColor(Color::White);
+
+	RectangleShape rectangle5(Vector2f(280.f, 110.f));
+	rectangle5.move(1305, 587);
+	rectangle5.setFillColor(Color::White);
+
+	int car_num = 0;
+	bool choosed = false;
+
+	while (window.isOpen())
+	{
+		Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+			{
+				game_gameover = true;
+				window.close();
+			}
+			if (event.type == Event::Resized)
+			{
+				std::cout << "trying to resize window" << std::endl;
+				window.setSize(Vector2u(1651, 715));
+			}
+			// get out of a level
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (rectangle5.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (car_num != 0)
+					{
+						back_s.setColor(Color(120, 120, 120));
+						choosed = true;
+					}
+				}
+				// 1
+				if (rectangle1.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (!CheckBought("Audi.txt"))
+					{
+						if (FileWorkGetMoney() >= 100)
+						{
+							std::ofstream fout("Audi.txt");
+							fout << "audi";
+							fout.close();
+
+							FileWorkGetMoney(100);
+							car_num = 1;
+						}
+					}
+					else
+						car_num = 1;
+				}
+				// 2
+				if (rectangle2.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (!CheckBought("Taxi.txt"))
+					{
+						if (FileWorkGetMoney() >= 200)
+						{
+							std::ofstream fout("Taxi.txt");
+							fout << "taxi";
+							fout.close();
+
+							FileWorkGetMoney(200);
+							car_num = 2;
+						}
+					}
+					else
+						car_num = 2;
+				}
+				// 3
+				if (rectangle3.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (!CheckBought("Mini_truck.txt"))
+					{
+						if (FileWorkGetMoney() >= 500)
+						{
+							std::ofstream fout("Mini_truck.txt");
+							fout << "Mini_truck";
+							fout.close();
+
+							FileWorkGetMoney(500);
+							car_num = 3;
+						}
+					}
+					else
+						car_num = 3;
+				}
+				// 4
+				if (rectangle4.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					if (!CheckBought("Mini_van.txt"))
+					{
+						if (FileWorkGetMoney() >= 1000)
+						{
+							std::ofstream fout("Mini_van.txt");
+							fout << "Mini_van";
+							fout.close();
+
+							FileWorkGetMoney(1000);
+							car_num = 4;
+						}
+					}
+					else
+						car_num = 4;
+				}
+			}
+		}
+		window.draw(back_s);
+		/*
+		window.draw(rectangle1);
+		window.draw(rectangle2);
+		window.draw(rectangle3);
+		window.draw(rectangle4);
+		window.draw(rectangle5
+		*/
+		window.display();
+
+		if (choosed) return car_num;
+	}
+}
+
+int racing(int car_num)
+{
+	car_num--;
+
+	std::cout << car_num << std::endl;
+
+	// window render
+	RenderWindow window(VideoMode(1650, 715), "mad racing!");
 	window.setFramerateLimit(60);
 
 	// figures angles sharpness 
@@ -107,32 +362,32 @@ void racing()
 	back.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\maps\\back.png");
 
 	Texture cars[5];
-	cars[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi.png");
-	cars[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
+	cars[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi.png");
+	cars[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi.png");
 	cars[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck.png");
 	cars[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van.png");
-	cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi.png");
+	cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
 
 	Texture speed_cars[5];
-	speed_cars[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-speed.png");
-	speed_cars[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
+	speed_cars[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-speed.png");
+	speed_cars[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-speed.png");
 	speed_cars[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-speed.png");
 	speed_cars[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-speed.png");
-	speed_cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-speed.png");
+	speed_cars[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
 
 	Texture cars_broken[5];
-	cars_broken[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken.png");
-	cars_broken[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
+	cars_broken[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken.png");
+	cars_broken[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken.png");
 	cars_broken[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-broken.png");
 	cars_broken[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-broken.png");
-	cars_broken[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken.png");
+	cars_broken[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
 
 	Texture cars_broken_hard[5];
-	cars_broken_hard[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken-hard.png");
-	cars_broken_hard[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
+	cars_broken_hard[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken-hard.png");
+	cars_broken_hard[1].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Taxi-broken.png");
 	cars_broken_hard[2].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_truck-broken-hard.png");
 	cars_broken_hard[3].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Mini_van-broken-hard.png");
-	cars_broken_hard[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Audi-broken-hard.png");
+	cars_broken_hard[4].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\Ambulance.png");
 
 	Texture speed_ambulance[3];
 	speed_ambulance[0].loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\cars\\ambulance_animation\\1.png");
@@ -162,6 +417,9 @@ void racing()
 	Texture money;
 	money.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\money.png");
 
+	Texture next;
+	next.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\next.png");
+
 	// sprites
 	Sprite background_s;
 	background_s.setTexture(back);
@@ -171,12 +429,11 @@ void racing()
 	bridge_s.setPosition(-30, 150);
 
 	Sprite car_s;
-	int random = getRandomCar();
-	random = 1;
+	int random = car_num;
 	std::cout << "RANDOM " << random << std::endl;
 	car_s.setTexture(cars[random]);
 	car_s.setPosition(100, 170);
-	car_s.setOrigin(22, 22);
+	car_s.setOrigin(38.5, 38.5);
 
 	Sprite swamp_s;
 	swamp_s.setTexture(swamp);
@@ -193,6 +450,10 @@ void racing()
 	Sprite money_s;
 	money_s.setTexture(money);
 	money_s.setPosition(50, 50);
+
+	Sprite next_s;
+	next_s.setTexture(next);
+	next_s.setPosition(790, 650);
 
 	int x_plane, y_plane;
 	x_plane = 1300; y_plane = 710;
@@ -239,7 +500,7 @@ void racing()
 	recordtxt.setFillColor(Color(247, 168, 24));
 	recordtxt.setOutlineColor(Color::Black);
 	recordtxt.setOutlineThickness(1.f);
-	recordtxt.move(600, 470);
+	recordtxt.move(600, 500);
 
 	// important variables
 	int timing = 0;
@@ -247,17 +508,24 @@ void racing()
 	float y = 170;
 	float speed = 0;
 	float angle = 0;
-	float maxSpeed = 12.0;
+	float maxSpeed = 0;
+	if (random == 1)
+		maxSpeed = 16.0;
+	else
+		maxSpeed = 12.0;
 	float acc = 0.2, dec = 0.3;
-	float turnSpeed = 0.08;
+	float turnSpeed = 0.07;
 	int AmountCollision = 0;
 	int result_money = 0;
+	bool once = true;
+	int rec = 0, cash = 0;
 	bool eaten = true; int fg = 0;
 	double x11 = 726, y11 = 467, x21 = 1018, y21 = 446, x31 = 856, y31 = 360;
 	double x12 = 724, y12 = 472, x22 = 788, y22 = 518, x32 = 900, y32 = 460;
 	double x13 = 900, y13 = 460, x23 = 972, y23 = 488, x33 = 1025, y33 = 450;
 	int x_money = 0, y_money = 0;
 
+	// less speed zones
 	RectangleShape rectangle1(Vector2f(52.f, 38.f));
 	rectangle1.move(44, 287);
 	rectangle1.setFillColor(Color::White);
@@ -304,13 +572,25 @@ void racing()
 		{
 			// get out
 			if (event.type == Event::Closed)
-				window.close(); // тогда закрываем его
+			{
+				game_gameover = true;
+				window.close();
+			}
 
 			// getting fixed size
 			if (event.type == Event::Resized)
 			{
 				std::cout << "trying to resize window" << std::endl;
 				window.setSize(Vector2u(1651, 715));
+			}
+			
+			// get out of a level
+			if(event.type == sf::Event::MouseButtonPressed)
+			{
+				if (next_s.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				{
+					return result_money;
+				}
 			}
 		}
 
@@ -551,7 +831,7 @@ void racing()
 
 
 			// ambulance animation 
-			if (random == 1 && abs(speed) > 1)
+			if (random == 4 && abs(speed) > 1)
 			{
 				if (abs(speed) > 10.0 && (int)angle % 90 != 0 && !Down)
 				{
@@ -568,7 +848,7 @@ void racing()
 						car_s.setTexture(speed_ambulance[2]);
 				}
 			}
-			else if (random == 1 && abs(speed) < 1)
+			else if (random == 4 && abs(speed) < 1)
 			{
 				car_s.setTexture(speed_ambulance[1]);
 			}
@@ -610,21 +890,30 @@ void racing()
 		window.draw(money_s);
 		window.draw(result);
 		window.draw(time);
+		std::cout << "TIMING:::: " << timing % 30 << std::endl;
 		if (timing % 30 < 15)
 		{
-			y_plane = 710;
+			if (timing == 0 || timing == 30)
+				y_plane = 710;
 			window.draw(plane_s);
 		}
 
 		if (timing > 60 || AmountCollision > 20)
 		{
 			system("cls");
-			int rec = FileWork(result_money);
+			if (once)
+			{
+				rec = FileWorkRec(result_money);
+				cash = FileWorkMoney(result_money);
+				once = false;
+			}
+			std::cout << "CASH:::: " << cash << std::endl;
 			recordtxt.setString("Your record: " + std::to_string(rec));
 			gameover.setString("G A M E O V E R\n R E S U L T: " + std::to_string(result_money));
 
 			window.draw(gameover);
 			window.draw(recordtxt);
+			window.draw(next_s);
 		}
 
 		/*
@@ -648,12 +937,29 @@ void racing()
 
 		window.display();
 	}
+	return result_money;
+}
+
+void result(int res)
+{
+	system("cls");
+	std::cout << "\t\tD R I F T\tR A C I N G" << std::endl << std::endl;
+	std::cout << "\t\tYout res: " << res << std::endl;
+	std::cout << "\t\tSure you can make more!" << std::endl;
+	std::cout << "\t\tLets try once again!" << std::endl << std::endl << std::endl << std::endl;
 }
 
 int main()
 {
-	racing();
-	std::cout << "endline" << std::endl;
+	int score = 0;
+	int car_num = 0;
+	while (!game_gameover)
+	{
+		car_num = shop();
+		if (!game_gameover)
+			score = racing(car_num);
+	}
+	result(score);
 
 	return 0;
 }
