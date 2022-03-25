@@ -1,3 +1,12 @@
+//  MAD RACING  //
+
+/*  project created by Oleksandr Kats
+	support: katsaleksandr424242@gmail.com
+	creation started 01.03.2022
+	creation stoppped 25.03.2022
+	Make some fun!
+*/
+
 #define WINVER 0x0501
 #define _WIN32_WINNT 0x0501
 #define _WIN32_WINDOWS 0x0501
@@ -203,8 +212,47 @@ int shop()
 	Texture back;
 	back.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop final.png");
 
+	Texture frame;
+	frame.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\frame real.png");
+
+	Texture frame2;
+	frame2.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\frame real2.png");
+
+	Texture garage_audi;
+	garage_audi.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\garage-audi.png");
+	Texture garage_taxi;
+	garage_taxi.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\garage-taxi.png");
+	Texture garage_mini_truck;
+	garage_mini_truck.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\garage-mini-truck.png");
+	Texture garage_mini_van;
+	garage_mini_van.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\garage-mini-van.png");
+
+	Sprite frame_s;
+	frame_s.setTexture(frame); 
+	frame_s.setPosition(-500, -500);
+
+	Sprite frame2_s;
+	frame2_s.setTexture(frame2);
+	frame2_s.setPosition(-500, -500);
+
 	Sprite back_s;
 	back_s.setTexture(back);
+
+	Sprite garage_audi_s;
+	garage_audi_s.setTexture(garage_audi);
+	garage_audi_s.setOrigin(400, 400);
+
+	Sprite garage_taxi_s;
+	garage_taxi_s.setTexture(garage_taxi);
+	garage_taxi_s.setOrigin(400, 400);
+
+	Sprite garage_mini_truck_s;
+	garage_mini_truck_s.setTexture(garage_mini_truck);
+	garage_mini_truck_s.setOrigin(400, 400);
+
+	Sprite garage_mini_van_s;
+	garage_mini_van_s.setTexture(garage_mini_van);
+	garage_mini_van_s.setOrigin(400, 400);
 
 	RectangleShape rectangle1(Vector2f(115.f, 43.f));
 	rectangle1.move(827, 302);
@@ -223,11 +271,28 @@ int shop()
 	rectangle4.setFillColor(Color::White);
 
 	RectangleShape rectangle5(Vector2f(280.f, 110.f));
-	rectangle5.move(1305, 587);
+	rectangle5.move(1307, 583);
 	rectangle5.setFillColor(Color::White);
+
+	RectangleShape rectangle1big(Vector2f(303.f, 60.f));
+	rectangle1big.move(662, 291);
+	rectangle1big.setFillColor(Color::Black);
+
+	RectangleShape rectangle2big(Vector2f(303.f, 60.f));
+	rectangle2big.move(662, 360);
+	rectangle2big.setFillColor(Color::Black);
+
+	RectangleShape rectangle3big(Vector2f(303.f, 60.f));
+	rectangle3big.move(662, 435);
+	rectangle3big.setFillColor(Color::Black);
+
+	RectangleShape rectangle4big(Vector2f(303.f, 60.f));
+	rectangle4big.move(662, 501);
+	rectangle4big.setFillColor(Color::Black);
 
 	int car_num = 0;
 	bool choosed = false;
+	float x_mouse = 0, y_mouse = 0;
 
 	while (window.isOpen())
 	{
@@ -256,87 +321,193 @@ int shop()
 					}
 				}
 				// 1
-				if (rectangle1.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				if (rectangle1big.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					if (!CheckBought("Audi.txt"))
+					if (rectangle1.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 					{
-						if (FileWorkGetMoney() >= 100)
+						if (!CheckBought("Audi.txt"))
 						{
-							std::ofstream fout("Audi.txt");
-							fout << "audi";
-							fout.close();
+							if (FileWorkGetMoney() >= 100)
+							{
+								std::ofstream fout("Audi.txt");
+								fout << "audi";
+								fout.close();
 
-							FileWorkGetMoney(100);
-							car_num = 1;
+								FileWorkGetMoney(100);
+								frame_s.setPosition(546, 131);
+								frame2_s.setPosition(-500, -500);
+								car_num = 1;
+							}
 						}
 					}
-					else
+					if (CheckBought("Audi.txt"))
+					{
+						frame_s.setPosition(546, 131);
+						frame2_s.setPosition(-500, -500);
 						car_num = 1;
+					}
 				}
 				// 2
-				if (rectangle2.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				if (rectangle2big.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					if (!CheckBought("Taxi.txt"))
+					if (rectangle2.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 					{
-						if (FileWorkGetMoney() >= 200)
+						if (!CheckBought("Taxi.txt"))
 						{
-							std::ofstream fout("Taxi.txt");
-							fout << "taxi";
-							fout.close();
+							if (FileWorkGetMoney() >= 200)
+							{
+								std::ofstream fout("Taxi.txt");
+								fout << "taxi";
+								fout.close();
 
-							FileWorkGetMoney(200);
-							car_num = 2;
+								frame_s.setPosition(546, 203);
+								frame2_s.setPosition(-500, -500);
+								FileWorkGetMoney(200);
+								car_num = 2;
+							}
 						}
 					}
-					else
+					if (CheckBought("Taxi.txt"))
+					{
+						frame_s.setPosition(546, 203);
+						frame2_s.setPosition(-500, -500);
 						car_num = 2;
+					}
 				}
 				// 3
-				if (rectangle3.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				if (rectangle3big.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					if (!CheckBought("Mini_truck.txt"))
-					{
-						if (FileWorkGetMoney() >= 500)
-						{
-							std::ofstream fout("Mini_truck.txt");
-							fout << "Mini_truck";
-							fout.close();
 
-							FileWorkGetMoney(500);
-							car_num = 3;
+					if (rectangle3.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+					{
+						if (!CheckBought("Mini_truck.txt"))
+						{
+							if (FileWorkGetMoney() >= 500)
+							{
+								std::ofstream fout("Mini_truck.txt");
+								fout << "Mini_truck";
+								fout.close();
+
+								frame2_s.setPosition(566, 280);
+								frame_s.setPosition(-500, -500);
+								FileWorkGetMoney(500);
+								car_num = 3;
+							}
 						}
 					}
-					else
+					if (CheckBought("Mini_truck.txt"))
+					{
+						frame2_s.setPosition(566, 280);
+						frame_s.setPosition(-500, -500);
 						car_num = 3;
+					}
 				}
 				// 4
-				if (rectangle4.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+				if (rectangle4big.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 				{
-					if (!CheckBought("Mini_van.txt"))
+					if (rectangle4.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
 					{
-						if (FileWorkGetMoney() >= 1000)
+						if (!CheckBought("Mini_van.txt"))
 						{
-							std::ofstream fout("Mini_van.txt");
-							fout << "Mini_van";
-							fout.close();
+							if (FileWorkGetMoney() >= 1000)
+							{
+								std::ofstream fout("Mini_van.txt");
+								fout << "Mini_van";
+								fout.close();
 
-							FileWorkGetMoney(1000);
-							car_num = 4;
+								frame_s.setPosition(546, 340);
+								frame2_s.setPosition(-500, -500);
+								FileWorkGetMoney(1000);
+								car_num = 4;
+							}
 						}
 					}
-					else
+					if (CheckBought("Mini_van.txt"))
+					{
+						frame_s.setPosition(546, 340);
+						frame2_s.setPosition(-500, -500);
 						car_num = 4;
+					}
 				}
 			}
 		}
+
+		if (Mouse::isButtonPressed)
+		{
+			Vector2i MousePos = Mouse::getPosition(window);
+			x_mouse = (float)MousePos.x;
+			y_mouse = (float)MousePos.y;
+			std::cout << x_mouse << "\t" << y_mouse << std::endl;
+		}
+
+		if (x_mouse > 702 && x_mouse < 770)
+		{
+			// audi
+			if (y_mouse > 300 && y_mouse < 333)
+			{
+				std::cout << "AUDI" << std::endl;
+				garage_audi_s.setPosition(x_mouse+50, y_mouse+120);
+			}
+			else
+				garage_audi_s.setPosition(-800, -800);
+
+			// taxi
+			if (y_mouse > 368 && y_mouse < 405)
+			{
+				std::cout << "TAXI" << std::endl;
+				garage_taxi_s.setPosition(x_mouse+85, y_mouse+205);
+			}
+			else
+				garage_taxi_s.setPosition(-800, -800);
+
+			// min-truck
+			if (y_mouse > 435 && y_mouse < 480)
+			{
+				std::cout << "MINI-TRUCK" << std::endl;
+				garage_mini_truck_s.setPosition(x_mouse+90, y_mouse+210);
+			}
+			else
+				garage_mini_truck_s.setPosition(-800, -800);
+
+			// min-van
+			if (y_mouse > 505 && y_mouse < 548)
+			{
+				std::cout << "MINI-VAN" << std::endl;
+				garage_mini_van_s.setPosition(x_mouse+90, y_mouse+215);
+			}
+			else
+				garage_mini_van_s.setPosition(-800, -800);
+		}
+		else
+		{
+			garage_audi_s.setPosition(-800, -800);
+			garage_taxi_s.setPosition(-800, -800);
+			garage_mini_truck_s.setPosition(-800, -800);
+			garage_mini_van_s.setPosition(-800, -800);
+		}
+
 		window.draw(back_s);
+		window.draw(frame_s);
+		window.draw(frame2_s);
+
+		window.draw(garage_audi_s);
+		window.draw(garage_taxi_s);
+		window.draw(garage_mini_truck_s);
+		window.draw(garage_mini_van_s);
+
 		/*
+		window.draw(rectangle1big);
+		window.draw(rectangle2big);
+		window.draw(rectangle3big);
+		window.draw(rectangle4big);
+
 		window.draw(rectangle1);
 		window.draw(rectangle2);
 		window.draw(rectangle3);
 		window.draw(rectangle4);
-		window.draw(rectangle5
+		window.draw(rectangle5);
 		*/
+		
 		window.display();
 
 		if (choosed) return car_num;
@@ -420,6 +591,9 @@ int racing(int car_num)
 	Texture next;
 	next.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\next.png");
 
+	Texture light;
+	light.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\lightning.png");
+
 	// sprites
 	Sprite background_s;
 	background_s.setTexture(back);
@@ -432,7 +606,7 @@ int racing(int car_num)
 	int random = car_num;
 	std::cout << "RANDOM " << random << std::endl;
 	car_s.setTexture(cars[random]);
-	car_s.setPosition(100, 170);
+	car_s.setPosition(115, 170);
 	car_s.setOrigin(38.5, 38.5);
 
 	Sprite swamp_s;
@@ -453,7 +627,11 @@ int racing(int car_num)
 
 	Sprite next_s;
 	next_s.setTexture(next);
-	next_s.setPosition(790, 650);
+	next_s.setPosition(755, 630);
+
+	Sprite light_s;
+	light_s.setTexture(light);
+	light_s.setPosition(540, 457);
 
 	int x_plane, y_plane;
 	x_plane = 1300; y_plane = 710;
@@ -504,20 +682,49 @@ int racing(int car_num)
 
 	// important variables
 	int timing = 0;
-	float x = 100;
+	float x = 119;
 	float y = 170;
 	float speed = 0;
 	float angle = 0;
-	float maxSpeed = 0;
-	if (random == 1)
-		maxSpeed = 16.0;
-	else
-		maxSpeed = 12.0;
+	float maxSpeed = 12.0;
 	float acc = 0.2, dec = 0.3;
 	float turnSpeed = 0.07;
 	int AmountCollision = 0;
+
+	switch (random) 
+	{
+	case 4:
+		maxSpeed = 16.0;
+		turnSpeed = 0.07;
+		acc = 0.4;
+		break;
+	case 3:
+		maxSpeed = 13.0;
+		turnSpeed = 0.07;
+		acc = 0.25;
+		break;
+	case 2:
+		maxSpeed = 11.0;
+		turnSpeed = 0.06;
+		acc = 0.2;
+		break;
+	case 1:
+		maxSpeed = 9.0;
+		turnSpeed = 0.05;
+		acc = 0.2;
+		break;
+	case 0:
+		maxSpeed = 7.0;
+		turnSpeed = 0.04;
+		acc = 0.1;
+		break;
+	default:
+		maxSpeed = 9.0;
+	}
+
 	int result_money = 0;
 	bool once = true;
+	float x_mouse = 0, y_mouse = 0;
 	int rec = 0, cash = 0;
 	bool eaten = true; int fg = 0;
 	double x11 = 726, y11 = 467, x21 = 1018, y21 = 446, x31 = 856, y31 = 360;
@@ -592,6 +799,14 @@ int racing(int car_num)
 					return result_money;
 				}
 			}
+		}
+
+		if (Mouse::isButtonPressed)
+		{
+			Vector2i MousePos = Mouse::getPosition(window);
+			x_mouse = (float)MousePos.x;
+			y_mouse = (float)MousePos.y;
+			std::cout << x_mouse << "\t" << y_mouse << std::endl;
 		}
 
 		if (timing <= 60 && AmountCollision < 20)
@@ -708,6 +923,13 @@ int racing(int car_num)
 				else
 					speed = 0 - speed * 0.75;
 			}
+			if (x > 565 && x < 608 && y < 575 && y > 545)
+			{
+				if (abs(speed) < 1)
+					speed = 0 - speed * 1.5;
+				else
+					speed = 0 - speed * 0.75;
+			}
 
 			// cheching the house triangles
 
@@ -764,11 +986,11 @@ int racing(int car_num)
 			// cheching the circles of bushes and swamp
 			if (abs(speed) > 1.0)
 			{
-				if ((x - 510) * (x - 510) + (y - 235) * (y - 235) <= pow(87.5, 2))
+				if ((x - 510) * (x - 510) + (y - 235) * (y - 235) <= pow(84.5, 2))
 					speed *= 0.65;
-				if ((x - 300) * (x - 300) + (y - 650) * (y - 650) <= pow(110, 2))
+				if ((x - 300) * (x - 300) + (y - 650) * (y - 650) <= pow(105, 2))
 					speed *= 0.85;
-				if ((x - 1267) * (x - 1267) + (y - 430) * (y - 430) <= pow(97.5, 2))
+				if ((x - 1267) * (x - 1267) + (y - 430) * (y - 430) <= pow(95, 2))
 					speed *= 0.85;
 
 				// speed and drift effect
@@ -888,9 +1110,9 @@ int racing(int car_num)
 		window.draw(bush_s);
 		window.draw(house_s);
 		window.draw(money_s);
+		window.draw(light_s);
 		window.draw(result);
 		window.draw(time);
-		std::cout << "TIMING:::: " << timing % 30 << std::endl;
 		if (timing % 30 < 15)
 		{
 			if (timing == 0 || timing == 30)
@@ -907,7 +1129,6 @@ int racing(int car_num)
 				cash = FileWorkMoney(result_money);
 				once = false;
 			}
-			std::cout << "CASH:::: " << cash << std::endl;
 			recordtxt.setString("Your record: " + std::to_string(rec));
 			gameover.setString("G A M E O V E R\n R E S U L T: " + std::to_string(result_money));
 
@@ -943,7 +1164,7 @@ int racing(int car_num)
 void result(int res)
 {
 	system("cls");
-	std::cout << "\t\tD R I F T\tR A C I N G" << std::endl << std::endl;
+	std::cout << "\n\t\tD R I F T\tR A C I N G" << std::endl << std::endl;
 	std::cout << "\t\tYout res: " << res << std::endl;
 	std::cout << "\t\tSure you can make more!" << std::endl;
 	std::cout << "\t\tLets try once again!" << std::endl << std::endl << std::endl << std::endl;
