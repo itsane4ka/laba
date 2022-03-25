@@ -227,6 +227,13 @@ int shop()
 	Texture garage_mini_van;
 	garage_mini_van.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\shop\\garage-mini-van.png");
 
+	Texture errormsg;
+	errormsg.loadFromFile("C:\\programming\\fight for ukraine\\fight for ukraine\\Sprites\\error.png");
+
+	Sprite errormsg_s;
+	errormsg_s.setTexture(errormsg);
+	errormsg_s.setPosition(605, 260);
+
 	Sprite frame_s;
 	frame_s.setTexture(frame); 
 	frame_s.setPosition(-500, -500);
@@ -290,9 +297,18 @@ int shop()
 	rectangle4big.move(662, 501);
 	rectangle4big.setFillColor(Color::Black);
 
+	RectangleShape rectangleerror2(Vector2f(50.f, 50.f));
+	rectangleerror2.move(931, 326);
+	rectangleerror2.setFillColor(Color::Black);
+
+	RectangleShape rectangleerror(Vector2f(100.f, 36.f));
+	rectangleerror.move(765, 427);
+	rectangleerror.setFillColor(Color::Black);
+
 	int car_num = 0;
 	bool choosed = false;
 	float x_mouse = 0, y_mouse = 0;
+	bool not_enough_money = false;
 
 	while (window.isOpen())
 	{
@@ -338,6 +354,8 @@ int shop()
 								frame2_s.setPosition(-500, -500);
 								car_num = 1;
 							}
+							else
+								not_enough_money = true;
 						}
 					}
 					if (CheckBought("Audi.txt"))
@@ -365,6 +383,8 @@ int shop()
 								FileWorkGetMoney(200);
 								car_num = 2;
 							}
+							else
+								not_enough_money = true;
 						}
 					}
 					if (CheckBought("Taxi.txt"))
@@ -393,6 +413,8 @@ int shop()
 								FileWorkGetMoney(500);
 								car_num = 3;
 							}
+							else
+								not_enough_money = true;
 						}
 					}
 					if (CheckBought("Mini_truck.txt"))
@@ -420,6 +442,8 @@ int shop()
 								FileWorkGetMoney(1000);
 								car_num = 4;
 							}
+							else
+								not_enough_money = true;
 						}
 					}
 					if (CheckBought("Mini_van.txt"))
@@ -429,6 +453,10 @@ int shop()
 						car_num = 4;
 					}
 				}
+				if (rectangleerror.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+					not_enough_money = false;
+				if (rectangleerror2.getGlobalBounds().contains(window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y })))
+					not_enough_money = false;
 			}
 		}
 
@@ -486,6 +514,28 @@ int shop()
 			garage_mini_van_s.setPosition(-800, -800);
 		}
 
+		if (not_enough_money)
+		{
+			std::cout << "OOOOOOOOOOOOOOOOOOOOOOOOOOOOO" << std::endl;
+			back_s.setColor(Color(120, 120, 120));
+			frame_s.setColor(Color(120, 120, 120));
+			frame2_s.setColor(Color(120, 120, 120));
+			garage_audi_s.setColor(Color(120, 120, 120));
+			garage_taxi_s.setColor(Color(120, 120, 120));
+			garage_mini_van_s.setColor(Color(120, 120, 120));
+			garage_mini_truck_s.setColor(Color(120, 120, 120));
+		}
+		else
+		{
+			back_s.setColor(Color(255, 255, 255));
+			frame_s.setColor(Color(255, 255, 255));
+			frame2_s.setColor(Color(255, 255, 255));
+			garage_audi_s.setColor(Color(255, 255, 255));
+			garage_taxi_s.setColor(Color(255, 255, 255));
+			garage_mini_van_s.setColor(Color(255, 255, 255));
+			garage_mini_truck_s.setColor(Color(255, 255, 255));
+		}
+
 		window.draw(back_s);
 		window.draw(frame_s);
 		window.draw(frame2_s);
@@ -495,7 +545,12 @@ int shop()
 		window.draw(garage_mini_truck_s);
 		window.draw(garage_mini_van_s);
 
+		if (not_enough_money)
+			window.draw(errormsg_s);
 		/*
+		window.draw(rectangleerror);
+		window.draw(rectangleerror2);
+
 		window.draw(rectangle1big);
 		window.draw(rectangle2big);
 		window.draw(rectangle3big);
