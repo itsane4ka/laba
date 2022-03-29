@@ -80,7 +80,7 @@ void GetVec(int size, vector <MonstersData> &monster)
     uniform_int_distribution<> name(0, 9);
     uniform_int_distribution<> health(1, 50000);
     uniform_int_distribution<> attacks(1, 2000);
-    uniform_int_distribution<> type(1, 10);
+    uniform_int_distribution<> type(1, 4);
     uniform_int_distribution<> day(1, 31);
     uniform_int_distribution<> month(1, 12);
     uniform_int_distribution<> year(2000, 2022);
@@ -185,8 +185,8 @@ void SortByAttackType(MonstersData *monster, int size)
             max = monster[i].special_attack_type;
     }
 
-    int* count = new int[max];
-    MonstersData* output = new MonstersData[max];
+    int* count = new int[max+1];
+    MonstersData* output = new MonstersData[size];
 
     for (int i = 0; i <= max; ++i)
     {
@@ -212,6 +212,67 @@ void SortByAttackType(MonstersData *monster, int size)
 
     for (int i = 0; i < size; i++) {
         monster[i] = output[i];
+    }
+}
+
+bool LessThanMid(DateOfCreation appearance, DateOfCreation mid)
+{
+    if (appearance.year < mid.year)
+        return true;
+    else if (appearance.year == mid.year)
+    {
+        if (appearance.month < mid.month)
+            return true;
+        else if (appearance.month == mid.month)
+        {
+            if (appearance.day < mid.day)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool EqualData(DateOfCreation appearance, DateOfCreation mid)
+{
+    if (appearance.day == mid.day && appearance.month == mid.month && appearance.year == mid.year)
+        return true;
+    else
+        return false;
+}
+
+void SortByCreationDate(MonstersData* monster, int size)
+{
+    int i = 0;
+    int j = size - 1;
+    DateOfCreation mid = monster[size / 2].apperance_data;
+
+    do {
+        while (LessThanMid(monster[i].apperance_data, mid)) {
+            cout << "i: " << i << endl;
+            i++;
+        }
+        while (!LessThanMid(monster[j].apperance_data, mid) && !EqualData(monster[j].apperance_data, mid)) {
+            cout << "j:" << j << endl;
+            j--;
+        }
+
+        if (i <= j) {
+            swap(monster[i], monster[j]);
+            i++;
+            j--;
+        }
+    } while (i <= j);
+
+    if (j > 0) {
+        SortByCreationDate(monster, j + 1);
+    }
+    if (i < size) {
+        SortByCreationDate(&monster[i], size - i);
     }
 }
 
@@ -260,7 +321,7 @@ void SortVec(int size, vector <MonstersData> monster)
     }
 
     cout << "Sort by creation date:" << endl << endl;
-    SortByAttackType(monster_arr, size);
+    SortByCreationDate(monster_arr, size);
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
