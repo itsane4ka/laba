@@ -68,7 +68,7 @@ void PrintMonsterInfoArr(MonstersData monster_arr)
     cout << "Special attack type: " << monster_arr.special_attack_type << "\n";  // 1 - увеличить урон 2 - повторить атаку 3 - вылечить себя 4 - парализовать соперника
     cout << "Appereance data: " << monster_arr.apperance_data.day << "." << monster_arr.apperance_data.month << "." << monster_arr.apperance_data.year << "\n";
 
-    cout << endl << endl << endl;
+    cout << endl << endl;
 }
 
 void GetVec(int size, vector <MonstersData> &monster)
@@ -114,6 +114,54 @@ void SortByName(int size, vector <MonstersData> &monster)
         }
         swap(monster[startIndex], monster[smallestIndex]);
     }
+}
+
+int getMax(MonstersData array[], int n) 
+{
+    int max = array[0].health_amount;
+    for (int i = 1; i < n; i++)
+        if (array[i].health_amount > max)
+            max = array[i].health_amount;
+    return max;
+}
+
+void CountingSort(MonstersData* monster, int size, int place, int max)
+{
+    //cout << "DON" << endl;
+
+    int* count = new int[max];
+    MonstersData* output = new MonstersData[size];
+
+    for (int i = 0; i < max; ++i)
+        count[i] = 0;
+
+    // store the count of each element
+    for (int i = 0; i < size; i++) {
+        count[(monster[i].health_amount / place) % 10]++;
+    }
+
+    // store the cummulative count of each array
+    for (int i = 1; i < max; i++) {
+        //cout << count[i] << endl;
+        count[i] += count[i - 1];
+    }
+
+    for (int i = size - 1; i >= 0; i--) {
+        output[count[(monster[i].health_amount / place ) % 10] - 1] = monster[i];
+        count[(monster[i].health_amount / place) % 10]--;
+    }
+
+    for (int i = 0; i < size; i++) {
+        monster[i] = output[i];
+    }
+}
+
+void SortByHealth(MonstersData* monster, int size)
+{
+    int max = getMax(monster, size);
+
+    for (int place = 10000; max / place > 0; place *= 10)
+        CountingSort(monster, size, place, max+1);
 }
 
 void SortByAttacksAmount(MonstersData* monster, int size)
@@ -199,10 +247,8 @@ void SortByAttackType(MonstersData *monster, int size)
     }
 
     // store the cummulative count of each array
-    cout << "Count array " << endl;
     for (int i = 1; i <= max; i++) {
         count[i] += count[i - 1];
-        cout << count[i] << " ";
     }
 
     for (int i = size - 1; i >= 0; i--) {
@@ -253,11 +299,9 @@ void SortByCreationDate(MonstersData* monster, int size)
 
     do {
         while (LessThanMid(monster[i].apperance_data, mid)) {
-            cout << "i: " << i << endl;
             i++;
         }
         while (!LessThanMid(monster[j].apperance_data, mid) && !EqualData(monster[j].apperance_data, mid)) {
-            cout << "j:" << j << endl;
             j--;
         }
 
@@ -287,46 +331,76 @@ void SortVec(int size, vector <MonstersData> monster)
     }
 
     cout << "Sort by name: " << endl << endl;
+    auto begin1vec = std::chrono::high_resolution_clock::now();
     SortByName(size, monster);
+    auto end1vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms1vec = end1vec - begin1vec;
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
         PrintMonsterInfo(monster[i]);
     }
+    cout << "The time of name sort: " << (float)elapsed_ms1vec.count() * 1000 << " ms\n\n\n";
 
-    // cout << "Sort by health amount:::: " << endl;
+    cout << "Sort by health amount: " << endl << endl;
+    auto begin6vec = std::chrono::high_resolution_clock::now();
+    SortByHealth(monster_arr, size);
+    auto end6vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms6vec = end6vec - begin6vec;
+    for (int i = 0; i < size; i++)
+    {
+        cout << "MONSTER " << i << ": \n";
+        PrintMonsterInfo(monster[i]);
+    }
+    cout << "The time of health amount sort: " << (float)elapsed_ms6vec.count() * 1000 << " ms\n\n\n";
 
     cout << "Sort by attacaks amount:" << endl << endl;
+    auto begin2vec = std::chrono::high_resolution_clock::now();
     SortByAttacksAmount(monster_arr, size);
+    auto end2vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms2vec = end2vec - begin2vec;
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
         PrintMonsterInfo(monster_arr[i]);
     }
+    cout << "The time of attacaks amount sort: " << (float)elapsed_ms2vec.count() * 1000 << " ms\n\n\n";
 
     cout << "Sort by attacak probability:" << endl << endl;
+    auto begin3vec = std::chrono::high_resolution_clock::now();
     SortByAttackProbability(monster_arr, size);
+    auto end3vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms3vec = end3vec - begin3vec;
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
         PrintMonsterInfo(monster_arr[i]);
     }
+    cout << "The time of attacaks amount sort: " << (float)elapsed_ms3vec.count() * 1000 << " ms\n\n\n";
 
     cout << "Sort by super attacak type:" << endl << endl;
+    auto begin4vec = std::chrono::high_resolution_clock::now();
     SortByAttackType(monster_arr, size);
+    auto end4vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms4vec = end4vec - begin4vec;
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
         PrintMonsterInfo(monster_arr[i]);
     }
+    cout << "The time of super attacak type sort: " << (float)elapsed_ms3vec.count() * 1000 << " ms\n\n\n";
 
     cout << "Sort by creation date:" << endl << endl;
+    auto begin5vec = std::chrono::high_resolution_clock::now();
     SortByCreationDate(monster_arr, size);
+    auto end5vec = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> elapsed_ms5vec = end5vec - begin5vec;
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
         PrintMonsterInfo(monster_arr[i]);
     }
+    cout << "The time of creation date sort: " << (float)elapsed_ms3vec.count() * 1000 << " ms\n\n\n";
 }
 
 int main()
