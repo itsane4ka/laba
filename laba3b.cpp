@@ -23,7 +23,7 @@
 
 using namespace std;
 
-vector<string> names { "Alex", "Boris", "Charles", "Christopher", "David",
+vector<string> names{ "Alex", "Boris", "Charles", "Christopher", "David",
         "Robert", "Thomas", "Mark", "Kevin", "Jack" };
 
 struct DateOfCreation {
@@ -71,7 +71,7 @@ void PrintMonsterInfoArr(MonstersData monster_arr)
     cout << endl << endl;
 }
 
-void GetVec(int size, vector <MonstersData> &monster)
+void GetVec(int size, vector <MonstersData>& monster)
 {
     srand(static_cast<unsigned int>(time(0)));
 
@@ -102,7 +102,7 @@ void GetVec(int size, vector <MonstersData> &monster)
     }
 }
 
-void SortByName(int size, vector <MonstersData> &monster)
+void SortByName(int size, vector <MonstersData>& monster)
 {
     for (int startIndex = 0; startIndex < size - 1; startIndex++)
     {
@@ -116,7 +116,7 @@ void SortByName(int size, vector <MonstersData> &monster)
     }
 }
 
-int getMax(MonstersData array[], int n) 
+int getMax(MonstersData array[], int n)
 {
     int max = array[0].health_amount;
     for (int i = 1; i < n; i++)
@@ -147,7 +147,7 @@ void CountingSort(MonstersData* monster, int size, int place, int max)
     }
 
     for (int i = size - 1; i >= 0; i--) {
-        output[count[(monster[i].health_amount / place ) % 10] - 1] = monster[i];
+        output[count[(monster[i].health_amount / place) % 10] - 1] = monster[i];
         count[(monster[i].health_amount / place) % 10]--;
     }
 
@@ -160,8 +160,8 @@ void SortByHealth(MonstersData* monster, int size)
 {
     int max = getMax(monster, size);
 
-    for (int place = 10000; max / place > 0; place *= 10)
-        CountingSort(monster, size, place, max+1);
+    for (int place = 1; max / place > 0; place *= 10)
+        CountingSort(monster, size, place, max);
 }
 
 void SortByAttacksAmount(MonstersData* monster, int size)
@@ -222,18 +222,18 @@ void SortByAttackProbability(MonstersData* monster, int size)
     }
 }
 
-void SortByAttackType(MonstersData *monster, int size)
+void SortByAttackType(MonstersData* monster, int size)
 {
     int max = monster[0].special_attack_type;
 
     // find the largest element of the array
-    for (int i = 1; i < size; i++) 
+    for (int i = 1; i < size; i++)
     {
         if (monster[i].special_attack_type > max)
             max = monster[i].special_attack_type;
     }
 
-    int* count = new int[max+1];
+    int* count = new int[max + 1];
     MonstersData* output = new MonstersData[size];
 
     for (int i = 0; i <= max; ++i)
@@ -350,7 +350,7 @@ void SortVec(int size, vector <MonstersData> monster)
     for (int i = 0; i < size; i++)
     {
         cout << "MONSTER " << i << ": \n";
-        PrintMonsterInfo(monster[i]);
+        PrintMonsterInfo(monster_arr[i]);
     }
     cout << "The time of health amount sort: " << (float)elapsed_ms6vec.count() * 1000 << " ms\n\n\n";
 
