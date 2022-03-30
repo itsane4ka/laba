@@ -1,6 +1,6 @@
 //  IT-stamina  //
 
-/*  project created by Oleksandr Kats, Kapelushniy Boggan
+/*  project created by Oleksandr Kats, Kapelushniy Bogdan
 	programming languages supported: c++, python, JS, HTML 5.0
 	creation started 08.03.2022
 	creation stoppped 22.03.2022
@@ -148,7 +148,7 @@ bool registration(std::fstream& fin)
 		exit(0);
 
 	Texture back;
-	back.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\registration.png");
+	back.loadFromFile("registration.png");
 
 	Sprite background_s;
 	background_s.setTexture(back);
@@ -387,7 +387,7 @@ int stamina()
 
 	// next button
 	Texture next;
-	next.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\next.png");
+	next.loadFromFile("next.png");
 
 	Sprite next_s;
 	next_s.setTexture(next);
@@ -586,7 +586,7 @@ int stamina()
 
 	// creating texture
 	Texture mainpic;
-	mainpic.loadFromFile("C:\\programming\\IT-stamina pro\\IT-stamina pro\\choose.png");
+	mainpic.loadFromFile("choose.png");
 	Sprite sprite(mainpic);
 
 	// important variables
